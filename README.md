@@ -11,14 +11,21 @@ in your Python appication.
 
 Example:
 
-   import generator.openminds_helper
-   import generator.python_compiler
+    import generator.openminds_helper
+    import generator.python_compiler
 
-   
-   helper = generator.openminds_helper.OpenMINDS_helper()
-   copyright = generator.python_compiler.generate(helper.core.DATA__COPYRIGHT)
-   generator.python_compiler.generate_file(helper.core.DATA__COPYRIGHT)
 
+    helper = generator.openminds_helper.OpenMINDS_helper()
+    copyright = generator.python_compiler.generate(helper.core.DATA__COPYRIGHT)
+    copyright_schema = generator.python_compiler.generate_file(helper.core.DATA__COPYRIGHT)
+
+    copyright_schema.year = 2020
+    copyright_schema.holder = "somebody"
+
+    copyright_schema.save("test.json")
+
+This example generates a copyright schema object, for which the values can be
+set and it can be saved as openMINDS conform json.
 
 ## License
 This work is licensed under the MIT License.
