@@ -10,7 +10,8 @@ class Schema_Discovery:
     The idea is to offer an easy programmatical way to the schemas available.
     '''
 
-    def __init__(self, folder):
+    def __init__(self, folder, namespace):
+        print("Test")
         self.schemas = {}
         schema_files = []
         subfolder = False
@@ -26,6 +27,7 @@ class Schema_Discovery:
                     subfolder = True
 
         for schema_filename in schema_files:
+            print(schema_filename)
             stripped_filename = os.path.splitext(
                                     os.path.splitext(
                                         os.path.basename(schema_filename)
@@ -38,16 +40,18 @@ class Schema_Discovery:
                         {
                             "filename": schema_filename,
                             "name": stripped_filename,
+                            "namespace": namespace,
                             "substructure": schema_filename.split('/')[-2]
                         }
                 )
-                self.schemas[schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"substructure": schema_filename.split('/')[-2]}
+                self.schemas[schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace,"substructure": schema_filename.split('/')[-2]}
             else:
                 setattr(self,
                         stripped_filename.upper(),
                         {
                             "filename": schema_filename,
-                            "name": stripped_filename
+                            "name": stripped_filename,
+                            "namespace": namespace
                         }
                        )
-                self.schemas[stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename}
+                self.schemas[stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace}

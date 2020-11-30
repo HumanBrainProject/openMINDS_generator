@@ -111,7 +111,8 @@ def generate(schema):
 
         jsonschema.Draft7Validator.check_schema(schema_dictionary)
 
-        class_dictionary = {"__doc__": schema_dictionary["description"]}
+        #class_dictionary = {"__doc__": schema_dictionary["description"]}
+        class_dictionary = {}
 
         for property in schema_dictionary["properties"]:
             class_dictionary[_fix_property_name(property)] = None
