@@ -30,7 +30,7 @@ def main():
     print("Generating HTML documentation...")
     HTMLGenerator(version).generate()
     print("Generating Python classes...")
-    generate_all_schemas(os.path.join(os.path.realpath("."), "target", "schema.json"))
+    generate_all_schemas()
 
 
 if __name__ == "__main__":
