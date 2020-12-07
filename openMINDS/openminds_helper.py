@@ -1,4 +1,4 @@
-from generator.schema_discovery import Schema_Discovery
+from openMINDS.schema_discovery import Schema_Discovery
 
 
 class OpenMINDS_helper:
