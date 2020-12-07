@@ -58,6 +58,7 @@ def _build_constructor_string(schema_name, schema_dictionary):
     constructor_string += '\timport uuid\n'
     constructor_string += '\tUUID = uuid.uuid1()\n'
     constructor_string += '\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
+    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/' + schema_name + '"\n'
 
     return constructor_string
 
@@ -77,7 +78,6 @@ def _build_save_string(schema_name):
     save_string  = "def save(self, filename):\n"
     save_string += '\twith open(filename, "w") as outfile:\n'
     save_string += '\t\timport json\n'
-    save_string += '\t\tself.at_type = "https://openminds.ebrains.eu/' + schema_name + '"\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
     return save_string
