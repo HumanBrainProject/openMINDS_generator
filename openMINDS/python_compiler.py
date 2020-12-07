@@ -42,8 +42,8 @@ def _build_generate_dict_function(schema_dictionary):
 
 def _build_constructor_string(schema_dictionary):
     required_properties = schema_dictionary["required"]
-
     required_properties = _fix_property_names(required_properties)
+    required_properties.remove("at_id")
 
     constructor_string = "def __init__(self "
     for property in required_properties:
