@@ -146,9 +146,9 @@ def generate_file(schema):
         schema_dictionary = json.loads(f.read())
         template_string = "import json\n\n\n"
         template_string += "class $schema_name:\n"
-        constructor_string = _indent_function(_build_constructor_string(schema_dictionary).split("\n"))
+        constructor_string = _indent_function(_build_constructor_string(schema["name"], schema_dictionary).split("\n"))
         get_dict_string = _indent_function(_build_get_dict_string(schema_dictionary).split("\n"))
-        save_string = _indent_function(_build_save_string().split("\n"))
+        save_string = _indent_function(_build_save_string(schema["name"]).split("\n"))
 
         for property in schema_dictionary["properties"]:
             template_string += "\t" + _fix_property_name(property) + " = None\n"
