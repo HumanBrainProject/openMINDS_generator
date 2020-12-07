@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from openMINDS.schema_discovery import Schema_Discovery
 
 
