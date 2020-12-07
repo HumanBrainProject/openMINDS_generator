@@ -1,4 +1,6 @@
-from generator.schema_discovery import Schema_Discovery
+import sys
+sys.path.append('..')
+from openMINDS.schema_discovery import Schema_Discovery
 
 
 class OpenMINDS_helper:
