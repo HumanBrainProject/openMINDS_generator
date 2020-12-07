@@ -40,7 +40,7 @@ def _build_generate_dict_function(schema_dictionary):
     dict_fun_string += "\treturn dict_fun_string"
 
 
-def _build_constructor_string(schema_dictionary):
+def _build_constructor_string(schema_name, schema_dictionary):
     required_properties = schema_dictionary["required"]
     required_properties = _fix_property_names(required_properties)
     required_properties.remove("at_id")
@@ -54,6 +54,11 @@ def _build_constructor_string(schema_dictionary):
 
     for property in required_properties:
         constructor_string += "\tself." + property + " = " + property + " \n"
+
+    constructor_string += '\timport uuid\n'
+    constructor_string += '\tUUID = uuid.uuid1()\n'
+    constructor_string += '\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
+    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/' + schema_name + '"\n'
 
     return constructor_string
 
@@ -73,10 +78,6 @@ def _build_save_string(schema_name):
     save_string  = "def save(self, filename):\n"
     save_string += '\twith open(filename, "w") as outfile:\n'
     save_string += '\t\timport json\n'
-    save_string += '\t\timport uuid\n'
-    save_string += '\t\tUUID = uuid.uuid1()\n'
-    save_string += '\t\tself.at_type = "https://openminds.ebrains.eu/' + schema_name + '"\n'
-    save_string += '\t\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
     return save_string
@@ -104,9 +105,9 @@ def build_save(schema_name):
     return(d['save'])
 
 
-def build_constructor(schema_dictionary):
+def build_constructor(schema_name, schema_dictionary):
     d = {}
-    exec(_build_constructor_string(schema_dictionary), d)
+    exec(_build_constructor_string(schema_name, schema_dictionary), d)
 
     return(d['__init__'])
 
@@ -123,7 +124,7 @@ def generate(schema):
         for property in schema_dictionary["properties"]:
             class_dictionary[_fix_property_name(property)] = None
 
-        class_dictionary["__init__"] = build_constructor(schema_dictionary)
+        class_dictionary["__init__"] = build_constructor(schema["name"], schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
         class_dictionary["save"] = build_save(schema["name"])
 
@@ -145,9 +146,9 @@ def generate_file(schema):
         schema_dictionary = json.loads(f.read())
         template_string = "import json\n\n\n"
         template_string += "class $schema_name:\n"
-        constructor_string = _indent_function(_build_constructor_string(schema_dictionary).split("\n"))
+        constructor_string = _indent_function(_build_constructor_string(schema["name"], schema_dictionary).split("\n"))
         get_dict_string = _indent_function(_build_get_dict_string(schema_dictionary).split("\n"))
-        save_string = _indent_function(_build_save_string().split("\n"))
+        save_string = _indent_function(_build_save_string(schema["name"]).split("\n"))
 
         for property in schema_dictionary["properties"]:
             template_string += "\t" + _fix_property_name(property) + " = None\n"
