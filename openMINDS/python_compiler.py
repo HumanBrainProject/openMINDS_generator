@@ -71,6 +71,8 @@ def _build_get_dict_string(schema_dictionary):
 def _build_save_string():
     save_string  = "def save(self, filename):\n"
     save_string += '\twith open(filename, "w") as outfile:\n'
+    save_string += '\t\tprint(self.get_dict())\n'
+    save_string += '\t\timport json\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
     return save_string
