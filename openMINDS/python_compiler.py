@@ -42,8 +42,9 @@ def _build_generate_dict_function(schema_dictionary):
 
 def _build_constructor_string(schema_dictionary):
     required_properties = schema_dictionary["required"]
-
     required_properties = _fix_property_names(required_properties)
+    required_properties.remove("at_id")
+    required_properties.remove("at_type")
 
     constructor_string = "def __init__(self "
     for property in required_properties:
@@ -68,11 +69,14 @@ def _build_get_dict_string(schema_dictionary):
     return get_dict_string
 
 
-def _build_save_string():
+def _build_save_string(schema_name):
     save_string  = "def save(self, filename):\n"
     save_string += '\twith open(filename, "w") as outfile:\n'
-    save_string += '\t\tprint(self.get_dict())\n'
     save_string += '\t\timport json\n'
+    save_string += '\t\timport uuid\n'
+    save_string += '\t\tUUID = uuid.uuid1()\n'
+    save_string += '\t\tself.at_type = "https://openminds.ebrains.eu/' + schema_name + '"\n'
+    save_string += '\t\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
     return save_string
@@ -93,9 +97,9 @@ def build_get_dict(schema_dictionary):
     return(d['get_dict'])
 
 
-def build_save():
+def build_save(schema_name):
     d = {}
-    exec(_build_save_string(), d)
+    exec(_build_save_string(schema_name), d)
 
     return(d['save'])
 
@@ -121,7 +125,7 @@ def generate(schema):
 
         class_dictionary["__init__"] = build_constructor(schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
-        class_dictionary["save"] = build_save()
+        class_dictionary["save"] = build_save(schema["name"])
 
         return type(schema["name"], (object,), class_dictionary)
 
