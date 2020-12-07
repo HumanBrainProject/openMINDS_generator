@@ -11,7 +11,6 @@ class Schema_Discovery:
     '''
 
     def __init__(self, folder, namespace):
-        print("Test")
         self.schemas = {}
         schema_files = []
         subfolder = False
