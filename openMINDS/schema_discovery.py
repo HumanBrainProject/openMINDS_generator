@@ -26,7 +26,7 @@ class Schema_Discovery:
                     subfolder = True
 
         for schema_filename in schema_files:
-            print(schema_filename)
+            #print(schema_filename)
             stripped_filename = os.path.splitext(
                                     os.path.splitext(
                                         os.path.basename(schema_filename)
