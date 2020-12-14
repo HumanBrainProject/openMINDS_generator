@@ -2,8 +2,8 @@ import sys
 import jsonschema
 
 
-def main():
-    print("Validator")
+def main(json_ld_filename):
+    print(json_ld_filename)
 
 def print_help():
     print("Usage:")
@@ -17,4 +17,4 @@ def verify_parameters(argv):
 
 if __name__ == "__main__":
     verify_parameters(sys.argv)
-    main()
+    main(sys.argv[1])
