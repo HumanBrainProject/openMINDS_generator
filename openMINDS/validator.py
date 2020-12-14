@@ -1,5 +1,6 @@
 import sys
 import json
+import requests
 import jsonschema
 
 dict_schema_resolver = {
