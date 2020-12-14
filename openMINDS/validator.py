@@ -60,6 +60,8 @@ def main(json_ld_filename):
         print(data)
         print(data["@type"].split("/")[-1])
         print(dict_schema_resolver[data["@type"].split("/")[-1]])
+        schema = json.loads(requests.get(dict_schema_resolver[data["@type"].split("/")[-1]]).text)
+        jsonschema.validate(instance=data, schema=schema)
 
 def print_help():
     print("Usage:")
