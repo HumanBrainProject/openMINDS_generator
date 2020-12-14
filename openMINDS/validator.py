@@ -57,6 +57,8 @@ def main(json_ld_filename):
     with open(json_ld_filename, 'r') as json_ld_file:
         data = json.load(json_ld_file)
         print(data)
+        print(data["@type"].split("/")[-1])
+        print(dict_schema_resolver[data["@type"].split("/")[-1]])
 
 def print_help():
     print("Usage:")
