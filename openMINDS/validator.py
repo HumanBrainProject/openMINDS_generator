@@ -5,6 +5,9 @@ import jsonschema
 
 def main(json_ld_filename):
     print(json_ld_filename)
+    with open(json_ld_filename, 'r') as json_ld_file:
+        data = json.loads(json_ld_file)
+        print(data)
 
 def print_help():
     print("Usage:")
