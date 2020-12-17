@@ -157,6 +157,8 @@ def _build_setter_string(property, property_dict):
     else:
         print("normal")
 
+    print("")
+
     signature = "set_" + property
 
     function_string = "def " + signature + "(self, " + property + "):\n"
