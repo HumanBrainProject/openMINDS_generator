@@ -67,9 +67,11 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
         constructor_string += "\tself." + property + " = " + property + " \n"
 
     constructor_string += '\timport uuid\n'
-    constructor_string += '\tUUID = uuid.uuid1()\n'
-    constructor_string += '\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
-    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/' + schema_namespace + "/" + schema_name.title() + '"\n'
+    constructor_string += '\tself.UUID = uuid.uuid1()\n'
+    constructor_string += '\tself.type_name = "' + schema_name + '"\n'
+    constructor_string += '\tself.type_namespace = "' + schema_namespace + '"\n'
+    constructor_string += '\tself.at_id = "https://localhost/" + self.type_name + "/" + str(self.UUID)\n'
+    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/" + self.type_namespace + "/" + self.type_name.title()\n'
 
     return constructor_string
 
