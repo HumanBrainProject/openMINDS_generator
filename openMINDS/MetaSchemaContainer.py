@@ -16,11 +16,9 @@ def get_constructor_params(schema):
         return param_str
 
 def _build_adder_string(schema_dict):
-
     required_properties = get_constructor_params(schema_dict)
-    print(required_properties)
-
     signature = "add_" + schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
+
     function_string = "def " + signature + "(self, " + required_properties + "):\n"
     function_string += "\timport openMINDS.python_compiler\n"
     function_string += "\tschema_object = openMINDS.python_compiler.generate(" + str(schema_dict) + ")(" + required_properties + ")\n"
