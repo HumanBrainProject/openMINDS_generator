@@ -187,7 +187,6 @@ def generate(schema):
         print("Getter properties: " + str(getter_properties))
 
         for property in setter_properties:
-            print("setter for " + property)
             signature, func = _build_setter(property)
             class_dictionary[signature] = func
 
