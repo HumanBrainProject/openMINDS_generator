@@ -40,6 +40,7 @@ def build_adder(schema_dict):
 
 def _build_constructor_string():
     out_str = "def __init__(self, core, SANDS):\n"
+    out_str += "\tself.data = {}\n"
 
     return out_str
 
