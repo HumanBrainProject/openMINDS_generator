@@ -40,7 +40,6 @@ def build_adder(schema_dict):
 
 def _build_constructor_string():
     out_str = "def __init__(self, core, SANDS):\n"
-    out_str += "\tprint('test')"
 
     return out_str
 
