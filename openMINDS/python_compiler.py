@@ -158,6 +158,14 @@ def _build_setter_string(property):
     return (signature, function_string)
 
 
+def _build_setter(property):
+    d = {}
+    signature, function_string = _build_setter_string(property)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+
 def generate(schema):
     with open(schema["filename"],'r') as f:
         schema_dictionary = json.loads(f.read())
