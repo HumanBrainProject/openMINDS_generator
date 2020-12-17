@@ -39,6 +39,17 @@ def _build_generate_dict_function(schema_dictionary):
 
     dict_fun_string += "\treturn dict_fun_string"
 
+def get_constructor_params(schema):
+    with open(schema["filename"],'r') as f:
+        schema_dictionary = json.loads(f.read())
+
+        required_properties = schema_dictionary["required"]
+        required_properties = _fix_property_names(required_properties)
+        required_properties.remove("at_id")
+        required_properties.remove("at_type")
+
+        return required_properties
+
 
 def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
     required_properties = schema_dictionary["required"]
@@ -56,9 +67,11 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
         constructor_string += "\tself." + property + " = " + property + " \n"
 
     constructor_string += '\timport uuid\n'
-    constructor_string += '\tUUID = uuid.uuid1()\n'
-    constructor_string += '\tself.at_id = "https://localhost/' + schema_name + '/" + str(UUID)\n'
-    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/' + schema_namespace + "/" + schema_name.title() + '"\n'
+    constructor_string += '\tself.UUID = uuid.uuid1()\n'
+    constructor_string += '\tself.type_name = "' + schema_name + '"\n'
+    constructor_string += '\tself.type_namespace = "' + schema_namespace + '"\n'
+    constructor_string += '\tself.at_id = "https://localhost/" + self.type_name + "/" + str(self.UUID)\n'
+    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/" + self.type_namespace + "/" + self.type_name.title()\n'
 
     return constructor_string
 
@@ -75,8 +88,11 @@ def _build_get_dict_string(schema_dictionary):
 
 
 def _build_save_string(schema_name):
-    save_string  = "def save(self, filename):\n"
-    save_string += '\twith open(filename, "w") as outfile:\n'
+    save_string  = "def save(self, output_folder):\n"
+    save_string += '\timport pathlib\n'
+    save_string += '\tpathlib.Path(output_folder + "/" + self.type_name).mkdir(parents=True, exist_ok=True)\n'
+    save_string += '\tfile_name = output_folder + self.type_name + "/" + str(self.UUID)\n'
+    save_string += '\twith open(file_name, "w") as outfile:\n'
     save_string += '\t\timport json\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
