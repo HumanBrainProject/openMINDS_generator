@@ -55,3 +55,10 @@ def _build_save_string():
     out_str += "\tprint('save')\n"
 
     return out_str
+
+
+def build_save():
+    d = {}
+    exec(_build_save_string(), d)
+
+    return(d['save'])
