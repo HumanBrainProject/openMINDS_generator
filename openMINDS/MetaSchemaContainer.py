@@ -51,8 +51,9 @@ def build_constructor():
 
 
 def _build_save_string():
-    out_str = "def save(self):\n"
-    out_str += "\tprint('save')\n"
+    out_str = "def save(self, output_folder):\n"
+    out_str += "\tfor item in self.data.values():\n"
+    out_str += "\t\titem.save(output_folder)\n"
 
     return out_str
 
