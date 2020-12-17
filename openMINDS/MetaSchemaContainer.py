@@ -62,3 +62,10 @@ def build_save():
     exec(_build_save_string(), d)
 
     return(d['save'])
+
+
+def _build_get_string():
+    out_str = "def get(self):\n"
+    out_str += "\tprint('get')\n"
+
+    return out_str
