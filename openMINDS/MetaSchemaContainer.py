@@ -23,7 +23,8 @@ def _build_adder_string(schema_dict):
     signature = "add_" + schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
     function_string = "def " + signature + "(self, " + required_properties + "):\n"
     function_string += "\timport openMINDS.python_compiler\n"
-    function_string += "\treturn openMINDS.python_compiler.generate(" + str(schema_dict) + ")(" + required_properties + ")\n"
+    function_string += "\tschema_object = openMINDS.python_compiler.generate(" + str(schema_dict) + ")(" + required_properties + ")\n"
+    function_string += "\treturn schema_object.at_id\n"
 
     return (signature, function_string)
 
