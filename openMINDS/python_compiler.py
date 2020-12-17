@@ -88,8 +88,11 @@ def _build_get_dict_string(schema_dictionary):
 
 
 def _build_save_string(schema_name):
-    save_string  = "def save(self, filename):\n"
-    save_string += '\twith open(filename, "w") as outfile:\n'
+    save_string  = "def save(self, output_folder):\n"
+    save_string += '\timport pathlib\n'
+    save_string += '\tpathlib.Path(output_folder + "/" + self.type_name).mkdir(parents=True, exist_ok=True)\n'
+    save_string += '\tfile_name = output_folder + self.type_name + "/" + str(self.UUID)\n'
+    save_string += '\twith open(file_name, "w") as outfile:\n'
     save_string += '\t\timport json\n'
     save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
 
