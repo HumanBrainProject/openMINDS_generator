@@ -69,3 +69,10 @@ def _build_get_string():
     out_str += "\tprint('get')\n"
 
     return out_str
+
+
+def build_get():
+    d = {}
+    exec(_build_get_string(), d)
+
+    return(d['get'])
