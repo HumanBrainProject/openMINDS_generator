@@ -65,7 +65,7 @@ def build_save():
 
 
 def _build_get_string():
-    out_str = "def get(self):\n"
+    out_str = "def get(self, id):\n"
     out_str += "\tprint('get')\n"
 
     return out_str
