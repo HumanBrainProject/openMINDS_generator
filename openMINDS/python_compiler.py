@@ -128,6 +128,25 @@ def build_constructor(schema_name, schema_namespace, schema_dictionary):
     return(d['__init__'])
 
 
+def _build_getter_string(property):
+    signature = "get_" + property
+
+    function_string = "def " + signature + "(self, " + property + "):\n"
+    function_string = "\tprint('set')\n"
+
+    print(function_string)
+
+    return (signature, function_string)
+
+
+def _build_getter(property):
+    d = {}
+    signature, function_string = _build_getter_string(property)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+
 def generate(schema):
     with open(schema["filename"],'r') as f:
         schema_dictionary = json.loads(f.read())
@@ -139,6 +158,20 @@ def generate(schema):
 
         for property in schema_dictionary["properties"]:
             class_dictionary[_fix_property_name(property)] = None
+
+        setter_properties = _fix_property_names(schema_dictionary["properties"])
+        setter_properties.remove("at_id")
+        setter_properties.remove("at_type")
+        print("Setter properties: " + str(setter_properties))
+
+        getter_properties = _fix_property_names(schema_dictionary["properties"])
+        print("Getter properties: " + str(getter_properties))
+
+        for property in setter_properties:
+            print("setter for " + property)
+
+        for property in getter_properties:
+            print("getter for " + property)
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
