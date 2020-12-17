@@ -1,10 +1,52 @@
-import os
-from openMINDS.schema_discovery import Schema_Discovery
+import json
 
-class MetaSchemaContainer:
-    def __init__(self):
-        working_dir = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
-        core_folder = working_dir + "/target/core/v3/schema.json/"
-        sands_folder = working_dir + "/target/SANDS/v1/schema.json/"
-        self._core = Schema_Discovery(core_folder, "core")
-        self._SANDS = Schema_Discovery(sands_folder, "SANDS")
+def get_constructor_params(schema):
+    with open(schema["filename"],'r') as f:
+        schema_dictionary = json.loads(f.read())
+
+        required_properties = schema_dictionary["required"]
+        required_properties.remove("@id")
+        required_properties.remove("@type")
+
+        param_str = ""
+
+        for property in required_properties:
+            param_str += property + ", "
+
+        return param_str
+
+def _build_adder_string(schema_dict):
+
+    required_properties = get_constructor_params(schema_dict)
+    print(required_properties)
+
+    signature = "add_" + schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
+    function_string = "def " + signature + "(self, " + required_properties + "):\n"
+    function_string += "\timport openMINDS.python_compiler\n"
+    function_string += "\treturn openMINDS.python_compiler.generate(" + str(schema_dict) + ")(" + required_properties + ")\n"
+
+    return (signature, function_string)
+
+
+def build_adder(schema_dict):
+    d = {}
+    signature, function_string = _build_adder_string(schema_dict)
+    print(signature)
+    print(function_string)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+
+def _build_constructor_string():
+    out_str = "def __init__(self, core, SANDS):\n"
+    out_str += "\tprint('test')"
+
+    return out_str
+
+
+def build_constructor():
+    d = {}
+    exec(_build_constructor_string(), d)
+
+    return(d['__init__'])

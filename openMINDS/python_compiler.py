@@ -39,6 +39,17 @@ def _build_generate_dict_function(schema_dictionary):
 
     dict_fun_string += "\treturn dict_fun_string"
 
+def get_constructor_params(schema):
+    with open(schema["filename"],'r') as f:
+        schema_dictionary = json.loads(f.read())
+
+        required_properties = schema_dictionary["required"]
+        required_properties = _fix_property_names(required_properties)
+        required_properties.remove("at_id")
+        required_properties.remove("at_type")
+
+        return required_properties
+
 
 def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
     required_properties = schema_dictionary["required"]

@@ -1,4 +1,5 @@
 import os
+import openMINDS.MetaSchemaContainer
 
 from openMINDS.schema_discovery import Schema_Discovery
 
@@ -26,3 +27,14 @@ class OpenMINDS_helper:
         # Discover schemas available in the folders defined above
         self.core = Schema_Discovery(core_folder, "core")
         self.SANDS = Schema_Discovery(sands_folder, "SANDS")
+
+
+    def get_container(self):
+        class_dictionary = {}
+        class_dictionary["__init__"] = openMINDS.MetaSchemaContainer.build_constructor()
+
+        for schema in self.core.schemas:
+            signature, func = openMINDS.MetaSchemaContainer.build_adder(self.core.schemas[schema])
+            class_dictionary[signature] = func
+
+        return type("MetaSchemaContainer", (object,), class_dictionary)(self.core, self.SANDS)
