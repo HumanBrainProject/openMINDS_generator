@@ -33,6 +33,7 @@ class OpenMINDS_helper:
         class_dictionary = {}
         class_dictionary["__init__"] = openMINDS.MetaSchemaContainer.build_constructor()
         class_dictionary["save"] = openMINDS.MetaSchemaContainer.build_save()
+        class_dictionary["get"] = openMINDS.MetaSchemaContainer.build_get()
 
         for schema in self.core.schemas:
             signature, func = openMINDS.MetaSchemaContainer.build_adder(self.core.schemas[schema])
