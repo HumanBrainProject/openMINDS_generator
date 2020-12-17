@@ -48,3 +48,10 @@ def build_constructor():
     exec(_build_constructor_string(), d)
 
     return(d['__init__'])
+
+
+def _build_save_string():
+    out_str = "def save(self):\n"
+    out_str += "\tprint('save')\n"
+
+    return out_str
