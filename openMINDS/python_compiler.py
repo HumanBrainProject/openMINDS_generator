@@ -181,7 +181,6 @@ def generate(schema):
         setter_properties = _fix_property_names(schema_dictionary["properties"])
         setter_properties.remove("at_id")
         setter_properties.remove("at_type")
-        print("Setter properties: " + str(setter_properties))
 
         getter_properties = _fix_property_names(schema_dictionary["properties"])
         print("Getter properties: " + str(getter_properties))
