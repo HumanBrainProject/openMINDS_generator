@@ -33,7 +33,6 @@ def _build_adder_string(schema_dict):
 def build_adder(schema_dict):
     d = {}
     signature, function_string = _build_adder_string(schema_dict)
-    print(signature)
     print(function_string)
     exec(function_string, d)
 
