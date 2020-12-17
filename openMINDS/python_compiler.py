@@ -132,7 +132,7 @@ def _build_getter_string(property):
     signature = "get_" + property
 
     function_string = "def " + signature + "(self, " + property + "):\n"
-    function_string += "\tprint('set')\n"
+    function_string += "\tprint('get')\n"
 
     print(function_string)
 
