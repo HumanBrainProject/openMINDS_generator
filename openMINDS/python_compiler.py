@@ -183,7 +183,6 @@ def generate(schema):
         setter_properties.remove("at_type")
 
         getter_properties = _fix_property_names(schema_dictionary["properties"])
-        print("Getter properties: " + str(getter_properties))
 
         for property in setter_properties:
             signature, func = _build_setter(property)
