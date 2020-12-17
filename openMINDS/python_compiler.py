@@ -145,7 +145,18 @@ def _build_getter(property):
     return(signature,(d[signature]))
 
 
-def _build_setter_string(property):
+def _build_setter_string(property, property_dict):
+    print(property)
+
+    # Check if this a embedded type
+    if "_embeddedTypes" in property_dict:
+        print("Embedded")
+    # Check if this is a linked type
+    elif "then" in property_dict:
+        print("linked")
+    else:
+        print("normal")
+
     signature = "set_" + property
 
     function_string = "def " + signature + "(self, " + property + "):\n"
@@ -154,9 +165,9 @@ def _build_setter_string(property):
     return (signature, function_string)
 
 
-def _build_setter(property):
+def _build_setter(property, property_dict):
     d = {}
-    signature, function_string = _build_setter_string(property)
+    signature, function_string = _build_setter_string(property, property_dict)
     exec(function_string, d)
 
     return(signature,(d[signature]))
@@ -181,7 +192,7 @@ def generate(schema):
         getter_properties = _fix_property_names(schema_dictionary["properties"])
 
         for property in setter_properties:
-            signature, func = _build_setter(property)
+            signature, func = _build_setter(property, schema_dictionary["properties"][property])
             class_dictionary[signature] = func
 
         for property in getter_properties:
