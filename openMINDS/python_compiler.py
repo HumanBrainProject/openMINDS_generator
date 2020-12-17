@@ -192,6 +192,7 @@ def generate(schema):
 
         for property in getter_properties:
             print("getter for " + property)
+            signature, func = _build_getter(property)
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
