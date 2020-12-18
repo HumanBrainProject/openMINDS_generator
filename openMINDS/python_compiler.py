@@ -195,12 +195,15 @@ def classify_properties(schema_dict):
         # Check if this a embedded type
         if "_embeddedTypes" in property_dict:
             print("Embedded")
+            out_dict["embedded"].append(property)
         # Check if this is a linked type
         elif "then" in property_dict:
             print("Linked")
+            out_dict["linked"].append(property)
         # Now it is a "normal" property
         else:
             print("normal")
+            out_dict["normal"].append(property)
 
 
 def generate(schema):
