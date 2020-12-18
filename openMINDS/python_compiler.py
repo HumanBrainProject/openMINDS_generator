@@ -185,6 +185,12 @@ def _build_setter(property, property_dict):
 
 def classify_properties(schema_dict):
     print("classify_properties")
+
+    out_dict = {}
+    out_dict["embedded"] = []
+    out_dict["linked"] = []
+    out_dict["normal"] = []
+
     for property in schema_dictionary["properties"]:
         # Check if this a embedded type
         if "_embeddedTypes" in property_dict:
