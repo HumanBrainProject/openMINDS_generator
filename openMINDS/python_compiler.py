@@ -191,13 +191,15 @@ def classify_properties(schema_dict):
     out_dict["linked"] = []
     out_dict["normal"] = []
 
-    for property in schema_dictionary["properties"]:
+    for property in schema_dict["properties"]:
+        print(property)
+        print(schema_dict["properties"][property])
         # Check if this a embedded type
-        if "_embeddedTypes" in property_dict:
+        if "_embeddedTypes" in schema_dict["properties"][property]:
             print("Embedded")
             out_dict["embedded"].append(property)
         # Check if this is a linked type
-        elif "then" in property_dict:
+        elif "then" in schema_dict["properties"][property]:
             print("Linked")
             out_dict["linked"].append(property)
         # Now it is a "normal" property
@@ -206,7 +208,7 @@ def classify_properties(schema_dict):
             out_dict["normal"].append(property)
 
     return out_dict
-    
+
 
 def generate(schema):
     with open(schema["filename"],'r') as f:
@@ -219,6 +221,8 @@ def generate(schema):
 
         for property in schema_dictionary["properties"]:
             class_dictionary[_fix_property_name(property)] = None
+
+        print(classify_properties(schema_dictionary))
 
         setter_properties = _fix_property_names(schema_dictionary["properties"])
         setter_properties.remove("at_id")
