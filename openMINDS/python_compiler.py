@@ -251,23 +251,8 @@ def generate(schema):
 
         setter_functions = _build_setter(properties)
         getter_functions = _build_getter(properties)
-
-        #setter_properties = _fix_property_names(schema_dictionary["properties"])
-        #setter_properties.remove("at_id")
-        #setter_properties.remove("at_type")
-
-        #getter_properties = _fix_property_names(schema_dictionary["properties"])
-
-        #for property in setter_properties:
-        #    signature, func = _build_setter_function(property, schema_dictionary["properties"][property])
-        #    class_dictionary[signature] = func
-
         class_dictionary.update(setter_functions)
         class_dictionary.update(getter_functions)
-
-        #for property in getter_properties:
-        #    signature, func = _build_getter_function(property)
-        #    class_dictionary[signature] = func
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
