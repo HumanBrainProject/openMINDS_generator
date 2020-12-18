@@ -205,6 +205,8 @@ def classify_properties(schema_dict):
             print("normal")
             out_dict["normal"].append(property)
 
+    return out_dict
+    
 
 def generate(schema):
     with open(schema["filename"],'r') as f:
