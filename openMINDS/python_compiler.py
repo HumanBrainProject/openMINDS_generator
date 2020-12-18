@@ -190,6 +190,10 @@ def classify_properties(schema_dict):
 
     return out_dict
 
+def _build_setter(properties_dict):
+    for property in properties_dict["normal"]:
+        print(property)
+
 
 def generate(schema):
     with open(schema["filename"],'r') as f:
@@ -204,6 +208,8 @@ def generate(schema):
             class_dictionary[_fix_property_name(property)] = None
 
         properties = classify_properties(schema_dictionary)
+
+        _build_setter(properties)
 
         setter_properties = _fix_property_names(schema_dictionary["properties"])
         setter_properties.remove("at_id")
