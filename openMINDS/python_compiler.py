@@ -159,7 +159,6 @@ def _build_setter_string(property, property_dict):
     else:
         signature = "set_" + property
         function_string = "def " + signature + "(self, " + property + "):\n"
-        function_string += "\tprint('set ' + str(property))\n"
         function_string += "\tself." + property + " = " + property + "\n"
 
     return (signature, function_string)
