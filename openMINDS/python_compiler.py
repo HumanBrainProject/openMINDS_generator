@@ -190,9 +190,28 @@ def classify_properties(schema_dict):
 
     return out_dict
 
+def _build_normal_setter(property):
+    signature = "set_" + property
+    function_string = "def " + signature + "(self, " + property + "):\n"
+    function_string += "\tself." + property + " = " + property + "\n"
+
+    d = {}
+    exec(function_string, d)
+
+    return (signature, d[signature])
+
+
 def _build_setter(properties_dict):
+    setter_functions = {}
+
+    properties_dict["normal"].remove("@id")
+    properties_dict["normal"].remove("@type")
+
     for property in properties_dict["normal"]:
-        print(property)
+        signature, func = _build_normal_setter(_fix_property_name(property))
+        setter_functions[signature] = func
+
+    return setter_functions
 
 
 def generate(schema):
@@ -209,17 +228,19 @@ def generate(schema):
 
         properties = classify_properties(schema_dictionary)
 
-        _build_setter(properties)
+        setter_functions = _build_setter(properties)
 
-        setter_properties = _fix_property_names(schema_dictionary["properties"])
-        setter_properties.remove("at_id")
-        setter_properties.remove("at_type")
+        #setter_properties = _fix_property_names(schema_dictionary["properties"])
+        #setter_properties.remove("at_id")
+        #setter_properties.remove("at_type")
 
         getter_properties = _fix_property_names(schema_dictionary["properties"])
 
-        for property in setter_properties:
-            signature, func = _build_setter_function(property, schema_dictionary["properties"][property])
-            class_dictionary[signature] = func
+        #for property in setter_properties:
+        #    signature, func = _build_setter_function(property, schema_dictionary["properties"][property])
+        #    class_dictionary[signature] = func
+
+        class_dictionary.update(setter_functions)
 
         for property in getter_properties:
             signature, func = _build_getter_function(property)
