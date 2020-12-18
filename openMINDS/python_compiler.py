@@ -151,27 +151,19 @@ def _build_setter_string(property, property_dict):
 
     # Check if this a embedded type
     if "_embeddedTypes" in property_dict:
-        print("Embedded")
-        print(property_dict["_embeddedTypes"])
         signature = "add_" + property
         function_string = "def " + signature + "(self, " + property + "):\n"
         function_string += "\tprint('add embedded')\n"
     # Check if this is a linked type
     elif "then" in property_dict:
-        print("Linked")
         signature = "add_" + property
         function_string = "def " + signature + "(self, " + property + "):\n"
         function_string += "\tprint('add linked')\n"
     else:
-        print("normal")
         signature = "set_" + property
         function_string = "def " + signature + "(self, " + property + "):\n"
         function_string += "\tprint('set ' + str(property))\n"
         function_string += "\tself." + property + " = " + property + "\n"
-
-    print(function_string)
-
-    print("")
 
     return (signature, function_string)
 
