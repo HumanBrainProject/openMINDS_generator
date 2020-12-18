@@ -137,7 +137,7 @@ def _build_getter_string(property):
     return (signature, function_string)
 
 
-def _build_getter(property):
+def _build_getter_function(property):
     d = {}
     signature, function_string = _build_getter_string(property)
     exec(function_string, d)
@@ -216,7 +216,7 @@ def generate(schema):
             class_dictionary[signature] = func
 
         for property in getter_properties:
-            signature, func = _build_getter(property)
+            signature, func = _build_getter_function(property)
             class_dictionary[signature] = func
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
