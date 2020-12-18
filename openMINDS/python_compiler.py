@@ -214,6 +214,27 @@ def _build_setter(properties_dict):
     return setter_functions
 
 
+def _build_normal_getter(property):
+    signature = "get_" + property
+    function_string = "def " + signature + "(self):\n"
+    function_string += "\treturn self." + property + "\n"
+
+    d = {}
+    exec(function_string, d)
+
+    return (signature, d[signature])
+
+
+def _build_getter(properties_dict):
+    getter_functions = {}
+
+    for property in properties_dict["normal"]:
+        signature, func = _build_normal_getter(_fix_property_name(property))
+        getter_functions[signature] = func
+
+    return getter_functions
+
+
 def generate(schema):
     with open(schema["filename"],'r') as f:
         schema_dictionary = json.loads(f.read())
@@ -229,22 +250,24 @@ def generate(schema):
         properties = classify_properties(schema_dictionary)
 
         setter_functions = _build_setter(properties)
+        getter_functions = _build_getter(properties)
 
         #setter_properties = _fix_property_names(schema_dictionary["properties"])
         #setter_properties.remove("at_id")
         #setter_properties.remove("at_type")
 
-        getter_properties = _fix_property_names(schema_dictionary["properties"])
+        #getter_properties = _fix_property_names(schema_dictionary["properties"])
 
         #for property in setter_properties:
         #    signature, func = _build_setter_function(property, schema_dictionary["properties"][property])
         #    class_dictionary[signature] = func
 
         class_dictionary.update(setter_functions)
+        class_dictionary.update(getter_functions)
 
-        for property in getter_properties:
-            signature, func = _build_getter_function(property)
-            class_dictionary[signature] = func
+        #for property in getter_properties:
+        #    signature, func = _build_getter_function(property)
+        #    class_dictionary[signature] = func
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
         class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
