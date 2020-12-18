@@ -146,8 +146,6 @@ def _build_getter(property):
 
 
 def _build_setter_string(property, property_dict):
-    print(property)
-
     # Check if this a embedded type
     if "_embeddedTypes" in property_dict:
         signature = "add_" + property
