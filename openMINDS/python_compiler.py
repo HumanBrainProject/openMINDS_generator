@@ -76,10 +76,10 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
     return constructor_string
 
 
-def _build_get_dict_string(schema_dictionary):
+def _build_get_dict_string(properties):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
-    for property in schema_dictionary["properties"]:
+    for property in properties["normal"]:
         get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
@@ -234,6 +234,8 @@ def _build_getter(properties_dict):
 
     return getter_functions
 
+def _init_embedded(property):
+    return None
 
 def generate(schema):
     with open(schema["filename"],'r') as f:
@@ -244,10 +246,13 @@ def generate(schema):
         #class_dictionary = {"__doc__": schema_dictionary["description"]}
         class_dictionary = {}
 
-        for property in schema_dictionary["properties"]:
+        properties = classify_properties(schema_dictionary)
+
+        for property in properties["normal"]:
             class_dictionary[_fix_property_name(property)] = None
 
-        properties = classify_properties(schema_dictionary)
+        for property in properties["embedded"]:
+            class_dictionary[_fix_property_name(property)] = None
 
         setter_functions = _build_setter(properties)
         getter_functions = _build_getter(properties)
@@ -255,7 +260,7 @@ def generate(schema):
         class_dictionary.update(getter_functions)
 
         class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
-        class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
+        class_dictionary["get_dict"] = build_get_dict(properties)
         class_dictionary["save"] = build_save(schema["name"])
 
         return type(schema["name"], (object,), class_dictionary)
