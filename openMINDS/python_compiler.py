@@ -183,6 +183,9 @@ def _build_setter(property, property_dict):
 
     return(signature,(d[signature]))
 
+def classify_properties(schema_dict):
+    print("classify_properties")
+
 
 def generate(schema):
     with open(schema["filename"],'r') as f:
