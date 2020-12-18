@@ -36,6 +36,25 @@ def build_adder(schema_dict):
     return(signature,(d[signature]))
 
 
+def _build_generator_string(schema_dict):
+    required_properties = get_constructor_params(schema_dict)
+    signature = schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
+
+    function_string = "def " + signature + "(self, " + required_properties + "):\n"
+    function_string += "\timport openMINDS.python_compiler\n"
+    function_string += "\tschema_object = openMINDS.python_compiler.generate(" + str(schema_dict) + ")(" + required_properties + ")\n"
+    function_string += "\treturn schema_object\n"
+
+    return (signature, function_string)
+
+def build_generator(schema_dict):
+    d = {}
+    signature, function_string = _build_generator_string(schema_dict)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+
 def _build_constructor_string():
     out_str = "def __init__(self, core, SANDS):\n"
     out_str += "\tself.data = {}\n"
