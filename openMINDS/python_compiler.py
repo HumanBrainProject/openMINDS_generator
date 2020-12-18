@@ -164,7 +164,7 @@ def _build_setter_string(property, property_dict):
     return (signature, function_string)
 
 
-def _build_setter(property, property_dict):
+def _build_setter_function(property, property_dict):
     d = {}
     signature, function_string = _build_setter_string(property, property_dict)
     exec(function_string, d)
@@ -212,7 +212,7 @@ def generate(schema):
         getter_properties = _fix_property_names(schema_dictionary["properties"])
 
         for property in setter_properties:
-            signature, func = _build_setter(property, schema_dictionary["properties"][property])
+            signature, func = _build_setter_function(property, schema_dictionary["properties"][property])
             class_dictionary[signature] = func
 
         for property in getter_properties:
