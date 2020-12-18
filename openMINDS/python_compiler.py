@@ -203,7 +203,7 @@ def generate(schema):
         for property in schema_dictionary["properties"]:
             class_dictionary[_fix_property_name(property)] = None
 
-        properties = classify_properties(schema_dictionary))
+        properties = classify_properties(schema_dictionary)
 
         setter_properties = _fix_property_names(schema_dictionary["properties"])
         setter_properties.remove("at_id")
