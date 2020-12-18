@@ -1,7 +1,9 @@
+import re
 import json
 import jsonschema
 import os.path
 import pathlib
+import requests
 
 from string import Template
 
@@ -234,36 +236,65 @@ def _build_getter(properties_dict):
 
     return getter_functions
 
+
+def _schema_resolve(schema_name):
+    schema_name = schema_name.split("/")[-1]
+    schema_name = schema_name[0].lower() + schema_name[1:]
+    schemas = requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/").text.split()
+    print(schemas)
+    pattern = r'\b' + re.escape(schema_name) + r'\b'
+    print(pattern)
+    indices = [i for i, x in enumerate(schemas) if re.search(pattern, x)]
+    print(indices)
+
+    return schemas[indices[0]]
+
 def _init_embedded(property):
-    return None
+    print(property)
+    #return json.loads(requests.get(_schema_resolve(property["_embeddedTypes"][0])).text)
+    return generate(json.loads(requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/" + _schema_resolve(property["_embeddedTypes"][0])).text))()
 
 def generate(schema):
-    with open(schema["filename"],'r') as f:
-        schema_dictionary = json.loads(f.read())
+    schema_dictionary = None
+    if "filename" in schema:
+        with open(schema["filename"],'r') as f:
+            schema_dictionary = json.loads(f.read())
+            jsonschema.Draft7Validator.check_schema(schema_dictionary)
 
+    else:
+        schema_dictionary = schema
         jsonschema.Draft7Validator.check_schema(schema_dictionary)
+        schema_name = schema_dictionary["properties"]["@type"]["const"].split("/")[-1]
+        schema_namespace = schema_dictionary["properties"]["@type"]["const"].split("/")[-2]
+        print("schema_name " + schema_name)
+        print("schema_namespace " + schema_namespace)
+        schema_dictionary["name"] = schema_name
+        schema_dictionary["namespace"] = schema_namespace
 
-        #class_dictionary = {"__doc__": schema_dictionary["description"]}
-        class_dictionary = {}
+    #class_dictionary = {"__doc__": schema_dictionary["description"]}
+    class_dictionary = {}
 
-        properties = classify_properties(schema_dictionary)
+    properties = classify_properties(schema_dictionary)
 
-        for property in properties["normal"]:
-            class_dictionary[_fix_property_name(property)] = None
+    for property in properties["normal"]:
+        class_dictionary[_fix_property_name(property)] = None
 
-        for property in properties["embedded"]:
-            class_dictionary[_fix_property_name(property)] = None
+    for property in properties["embedded"]:
+        class_dictionary[_fix_property_name(property)] = None
 
-        setter_functions = _build_setter(properties)
-        getter_functions = _build_getter(properties)
-        class_dictionary.update(setter_functions)
-        class_dictionary.update(getter_functions)
+    for property in properties["linked"]:
+        class_dictionary[_fix_property_name(property)] = None
 
-        class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
-        class_dictionary["get_dict"] = build_get_dict(properties)
-        class_dictionary["save"] = build_save(schema["name"])
+    setter_functions = _build_setter(properties)
+    getter_functions = _build_getter(properties)
+    class_dictionary.update(setter_functions)
+    class_dictionary.update(getter_functions)
 
-        return type(schema["name"], (object,), class_dictionary)
+    class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
+    class_dictionary["get_dict"] = build_get_dict(properties)
+    class_dictionary["save"] = build_save(schema["name"])
+
+    return type(schema["name"], (object,), class_dictionary)
 
 
 def generate_file(schema):
