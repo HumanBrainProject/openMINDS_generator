@@ -252,7 +252,13 @@ def _schema_resolve(schema_name):
 def _init_embedded(property):
     print(property)
     #return json.loads(requests.get(_schema_resolve(property["_embeddedTypes"][0])).text)
-    return generate(json.loads(requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/" + _schema_resolve(property["_embeddedTypes"][0])).text))()
+    return generate(
+            json.loads(
+            requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/"
+                            + _schema_resolve(property)
+                        ).text
+                       )
+                    )
 
 def generate(schema):
     schema_dictionary = None
