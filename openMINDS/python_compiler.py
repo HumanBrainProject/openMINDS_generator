@@ -213,6 +213,10 @@ def _build_setter(properties_dict):
         signature, func = _build_normal_setter(_fix_property_name(property))
         setter_functions[signature] = func
 
+    for property in properties_dict["embedded"]:
+        signature, func = _build_normal_setter(_fix_property_name(property))
+        setter_functions[signature] = func
+
     return setter_functions
 
 
