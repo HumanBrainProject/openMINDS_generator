@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>openMINDS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .property{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>openMINDS modules</h1>
+    <div>
+        {% for module in modules %}<a href="{{ module }}.html">{{ module }}</a><br/>
+        {% endfor %}
+</div>
+
+</body>
+
+</html>

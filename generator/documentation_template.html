@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>{{ simpleTypeName }} ({{ schemaVersion }})</h1>
+    <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
     <h3>{{ _type }} - <a href="{{ schemaId }}">JSON Schema</a></h3>
     <table>
         {% for property, propertyValue in properties.items() %}
