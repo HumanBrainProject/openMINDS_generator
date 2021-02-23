@@ -6,7 +6,7 @@
 <body>
     <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
     <h4>{{ _type }} - <a href="{{ schemaId }}">JSON Schema</a></h4>
-    <table>
+    <table class="properties">
         <tr class="header"><td class="property">Property*</td><td>Name</td><td>Content type(s)</td><td>Description</td><td>Instructions</td></tr>
         {% for property, propertyValue in properties.items() %}
         <tr>
