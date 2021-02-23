@@ -20,7 +20,7 @@
             <td class="property">{{ property }}</td>
             <td>{% for type in propertyValue["typeInformation"] %}{% if "url" in type %}<a href="{{ type['url'] }}">{{type['label']}}</a>{% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
             <td>{{propertyValue["description"]}}</td>
-            <td>{{propertyValue["instruction"]}}</td>
+            <td>{{propertyValue["_instruction"]}}</td>
         </tr>
         {% endfor %}
 
