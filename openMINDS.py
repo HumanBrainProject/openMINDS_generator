@@ -9,6 +9,7 @@ from generator.generate_html import HTMLGenerator
 from generator.generate_json_schema import JsonSchemaGenerator
 from generator.generate_plantuml import PlantUMLGenerator
 from generator.generate_python import generate_all_schemas
+from generator.vocab_extractor import VocabExtractor
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description='Generate various sources out of the EBRAINS openMINDS schema templates')
 parser.add_argument('--path', help="The path to the source", default=".")
@@ -21,18 +22,24 @@ def main():
     print("***************************************")
     print()
     print("Expanding the schemas...")
-    schema_information = Expander().expand(args["path"])
+    expander = Expander(args["path"])
+    expander.expand()
+    print("Extracting the vocab...")
+    types_file, properties_file = VocabExtractor(expander.schemas, args["path"]).extract()
+    expander.enrich_with_vocab(types_file, properties_file)
+
     print("Clear target directory")
     if os.path.exists(TARGET_PATH):
         shutil.rmtree(TARGET_PATH)
     print(f"Generating JSON schemas for...")
-    JsonSchemaGenerator(schema_information).generate()
+    JsonSchemaGenerator(expander.schemas).generate()
     print("Generating HTML documentation...")
-    HTMLGenerator(schema_information).generate()
+    HTMLGenerator(expander.schemas).generate()
     print("Generating UML documentation...")
-    PlantUMLGenerator(schema_information).generate()
-    print("Generating Python classes...")
-    generate_all_schemas()
+    PlantUMLGenerator(expander.schemas).generate()
+    # print("Generating Python classes...")
+    # generate_all_schemas()
+
 
 if __name__ == "__main__":
     main()

@@ -1,23 +1,17 @@
 <html>
 <head>
     <title>{{ _type }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .property{
-            font-weight: bold;
-        }
-    </style>
+    <style>{{ style|safe }}</style>
 </head>
 <body>
     <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
-    <h3>{{ _type }} - <a href="{{ schemaId }}">JSON Schema</a></h3>
+    <h4>{{ _type }} - <a href="{{ schemaId }}">JSON Schema</a></h4>
     <table>
+        <tr class="header"><td class="property">Property*</td><td>Name</td><td>Content type(s)</td><td>Description</td><td>Instructions</td></tr>
         {% for property, propertyValue in properties.items() %}
         <tr>
-            <td class="property">{{ property }}</td>
+            <td class="property nowrap">{{ property }}</td>
+            <td class="nowrap">{{ propertyValue["title"] }}</td>
             <td>{% for type in propertyValue["typeInformation"] %}{% if "url" in type %}<a href="{{ type['url'] }}">{{type['label']}}</a>{% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
             <td>{{propertyValue["description"]}}</td>
             <td>{{propertyValue["_instruction"]}}</td>
@@ -25,7 +19,7 @@
         {% endfor %}
 
     </table>
-
+    <div style="margin-top: 2em;">*This is the simplified property name - for use of the openMINDS vocabularies in a semantically correct way, please make use of the namespace <span style="font-weight: bold">https://openminds.ebrains.eu/vocab/</span> - so your fully qualified property name would look like "https://openminds.ebrains.eu/vocab/yourProperty"</div>
 </body>
 
 </html>

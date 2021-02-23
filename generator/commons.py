@@ -31,6 +31,9 @@ class SchemaStructure:
         self.file = file
         self.version = version
 
+    def set_absolute_path(self, absolute_path):
+        self.absolute_path = absolute_path
+
     def get_relative_path_for_expanded(self):
         return f"{self.schema_group}/{self.version}/{self.file}"
 
@@ -98,7 +101,7 @@ class Generator(object):
                                                 f"{schema_file_name_without_extension}.{self.format}")
                 print(f"Rendering {target_file_path}")
                 result = self._process_template(schema)
-                with open(target_file_path, "w") as target_file:
+                with open(target_file_path, "w", encoding="utf-8") as target_file:
                     target_file.write(result)
                 self.written_files.append(target_file_path)
 
