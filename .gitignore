@@ -131,4 +131,4 @@ dmypy.json
 target/*
 expanded/*
 
-.idea/*
+.idea/

@@ -1,9 +1,6 @@
 import os
 from typing import List
 
-import plantuml
-from plantuml import PlantUML
-
 from generator.commons import JinjaGenerator, TEMPLATE_PROPERTY_TYPE, \
     type_to_schema_url, TEMPLATE_PROPERTY_LINKED_TYPES, type_to_html_url, SchemaStructure, TEMPLATE_PROPERTY_EMBEDDED_TYPES
 
@@ -47,8 +44,6 @@ class PlantUMLGenerator(JinjaGenerator):
         overall_target = os.path.join(self.target_path, "overall.svg")
         with open(overall_file, "w") as overall_file:
             overall_file.write(overall)
-        PlantUML("http://www.plantuml.com/plantuml/svg/").processes_file(overall_file.name, overall_target)
-
 
 if __name__ == "__main__":
     PlantUMLGenerator([]).generate()
