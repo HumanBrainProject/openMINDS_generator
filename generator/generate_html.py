@@ -20,8 +20,9 @@ class HTMLGenerator(JinjaGenerator):
     def _schema_info_to_rel_url(self, schema_info):
         return schema_info.file.split("/")[-1].replace("tpl.json", "json")
 
-    def _schema_info_to_rel_html_url(self, schema_info):
-        return f"../../../../{schema_info.schema_group}/{schema_info.version}/{schema_info.file.replace('schema.tpl.json', 'html')}"
+    def _schema_info_to_rel_html_url(self, current_schema_info, schema_info):
+        number_of_relative_levels = len(f"{current_schema_info.schema_group}/{current_schema_info.version}/{current_schema_info.file}".split("/"))-1
+        return f"{'../'*number_of_relative_levels}{schema_info.schema_group}/{schema_info.version}/{schema_info.file.replace('schema.tpl.json', 'html')}"
 
     def _pre_process_template(self, schema):
         schema_information = self.schema_information_by_type[schema[TEMPLATE_PROPERTY_TYPE]]
@@ -35,13 +36,13 @@ class HTMLGenerator(JinjaGenerator):
                 property_value["typeInformation"] = []
                 for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
                     linked_type_info = self.schema_information_by_type[linked_type]
-                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(linked_type_info),
+                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
                                                              "label": os.path.basename(linked_type)})
             elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
                 property_value["typeInformation"] = []
                 for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
                     embedded_type_info = self.schema_information_by_type[embedded_type]
-                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(embedded_type_info),
+                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
                                                              "label": f"{os.path.basename(embedded_type)} (embedded)"})
             elif "type" in property_value and "format" in property_value:
                 property_value["typeInformation"] = [{"label": f"{property_value['type']} ({property_value['format']})"}]
