@@ -54,35 +54,45 @@ class HTMLGenerator(JinjaGenerator):
         self.schema_collection_by_group[schema["schemaGroup"]].append(schema_information)
         return schema
 
+    def _create_model_for_groups(self, group):
+        group_schema = {
+            "group": group,
+            "style": self.style,
+            "typesByCategory": {}
+        }
+        for schema in self.schema_collection_by_group[group]:
+            file_split = schema.file.split('/')
+            category = file_split[0] if len(file_split) > 1 else ""
+            if category not in group_schema["typesByCategory"]:
+                group_schema["typesByCategory"][category] = []
+            group_schema["typesByCategory"][category].append(
+                {"name": os.path.basename(schema.type), "url": f"{schema.schema_group}/{schema.version}/{schema.file.replace('schema.tpl.json', 'html')}"})
+
+        for k in group_schema["typesByCategory"]:
+            group_schema["typesByCategory"][k] = sorted(group_schema["typesByCategory"][k], key=lambda type: type["name"])
+        return group_schema
+
+
     def generate(self):
         super().generate()
         group_templ = self.env.get_template("group_template.html")
         for group in self.schema_collection_by_group.keys():
-            group_schema = {
-                "group": group,
-                "style": self.style,
-                "typesByCategory": {}
-            }
-            for schema in self.schema_collection_by_group[group]:
-                file_split = schema.file.split('/')
-                category = file_split[0] if len(file_split)>1 else ""
-                if category not in group_schema["typesByCategory"]:
-                    group_schema["typesByCategory"][category] = []
-                group_schema["typesByCategory"][category].append({"name": os.path.basename(schema.type), "url": f"{schema.schema_group}/{schema.version}/{schema.file.replace('schema.tpl.json', 'html')}"})
-
-            for k in group_schema["typesByCategory"]:
-                group_schema["typesByCategory"][k] = sorted(group_schema["typesByCategory"][k], key=lambda type: type["name"])
+            group_schema = self._create_model_for_groups(group)
             html = group_templ.render(group_schema)
             with open(os.path.join(self.target_path, f"{group}.html"), "w", encoding="utf-8") as group_file:
                 group_file.write(html)
         root_templ = self.env.get_template("root_template.html")
         root_model = {
-            "modules": sorted([m for m in self.schema_collection_by_group.keys()], key=str.casefold),
+            "modules": sorted([{"name": m, "types": self._create_model_for_groups(m)} for m in self.schema_collection_by_group.keys()], key=lambda module: module["name"].casefold()),
             "style": self.style
         }
         root_html = root_templ.render(root_model)
         with open(os.path.join(self.target_path, f"index.html"), "w", encoding="utf-8") as root_file:
             root_file.write(root_html)
+        default_content_templ = self.env.get_template("default_content_template.html")
+        default_html = default_content_templ.render(root_model)
+        with open(os.path.join(self.target_path, f"default.html"), "w", encoding="utf-8") as default_file:
+            default_file.write(default_html)
 
 if __name__ == "__main__":
     HTMLGenerator([]).generate()
