@@ -4,7 +4,7 @@ import openMINDS.MetaSchemaContainer
 from openMINDS.schema_discovery import Schema_Discovery
 
 
-class OpenMINDS_helper:
+class Helper:
     '''
     Helper class for openMINDS schemas
 
@@ -39,6 +39,8 @@ class OpenMINDS_helper:
             signature, func = openMINDS.MetaSchemaContainer.build_adder(self.core.schemas[schema])
             class_dictionary[signature] = func
             signature, func = openMINDS.MetaSchemaContainer.build_generator(self.core.schemas[schema])
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaContainer.build_help(self.core.schemas[schema])
             class_dictionary[signature] = func
 
         return type("MetaSchemaContainer", (object,), class_dictionary)(self.core, self.SANDS)
