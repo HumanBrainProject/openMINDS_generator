@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>openMINDS</title>
+    <style>{{ style|safe }}
+
+body{
+position: absolute;
+top:0;
+bottom:0;
+left:0;
+right: 0;
+}
+
+#content{
+ display:flex;
+ height: 100%;
+}
+
+#navig{
+    flex: 20%;
+    max-width: 50em;
+}
+
+#frame{
+flex-grow:1;
+width: 100%;
+height: 100%;
+margin-top: 3em;
+}
+
+#frame iframe{
+width: 100%;
+height: 100%;
+border: 0;
+}
+
+#navig h2{
+cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+<script>
+
+    function toggleCategory(id){
+    let doc = document.getElementById(id)
+    if (doc.style.display == 'none'){
+        doc.style.display = 'block';
+    }
+    else{
+        doc.style.display ='none';
+    }
+    }
+
+</script>
+<div id="content">
+    <div id="navig">
+        <img src="https://github.com/HumanBrainProject/openMINDS/raw/v1/img/openMINDS_logo.png" style="height: 5em;"/>
+        {% for module in modules %}<div><h2 onclick="toggleCategory('types{{module['name']}}');">{{ module["name"] }}</h2>
+            <div id="types{{module['name']}}" style="display:none;">
+                {% for g in module['types']['typesByCategory'].keys() %}
+                {% if g!= "" %}<h3>{{g}}</h3>{% endif %}
+                {% for t in module['types']['typesByCategory'][g] %}
+                 <a href="{{ t['url'] }}" target="innerFrame">{{ t['name'] }}</a><br/>
+                {% endfor %}
+                {% endfor %}
+                </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="frame">
+        <iframe name="innerFrame" src="default.html"></iframe>
+    </div>
+</div>
+</body>
+
+</html>

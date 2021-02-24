@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>{{ group }}</title>
+    <style>{{ style|safe }}</style>
+</head>
+<body>
+<div>
+      <table>
+        <tr><td>
+    {% for category in typesByCategory.keys()|sort(case_sensitive=False) %}<h3>{{ category }}</h3>
+             {% for type in typesByCategory[category]%}
+    <a href="{{ type['url'] }}" target="_blank">{{ type['name'] }}</a><br/>
+             {% if typesByCategory.keys()|length == 1 and loop.index%((typesByCategory[category]|length)/3) == 0 %}
+            </td><td>
+                {% endif %}
+            {% endfor %}
+    {% if loop.index%2 == 0 %}
+            </td><td>
+                {% endif %}
+    {% endfor %}
+   </td></tr>
+    </table>
+</div>
+
+</body>
+
+</html>

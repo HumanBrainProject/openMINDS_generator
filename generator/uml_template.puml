@@ -1,0 +1,8 @@
+@startuml
+class {{ simpleTypeName }} {
+{% for property, propertyValue in properties.items() %}+{{ property }}
+{% endfor %}
+}
+{% for property, propertyValue in properties.items() %}{% for type in propertyValue["typeInformation"] %}{{ simpleTypeName }} -d-> "{{ property }}" {{ type["type"] }}
+{% endfor %}{% endfor %}
+@enduml

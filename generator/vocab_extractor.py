@@ -2,13 +2,11 @@ import glob
 import json
 import os
 import re
+from typing import List
 
-from generator.commons import EXPANDED_DIR, SCHEMA_FILE_ENDING, TEMPLATE_PROPERTY_TYPE
+from generator.commons import SchemaStructure, TEMPLATE_PROPERTY_TYPE
 
-root_path = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-vocab_path = os.path.join(root_path, "vocab")
-properties_file = os.path.join(vocab_path, "properties.json")
-types_file = os.path.join(vocab_path, "types.json")
+
 
 
 def _camel_case_to_human_readable(value:str):
@@ -16,9 +14,16 @@ def _camel_case_to_human_readable(value:str):
 
 class VocabExtractor(object):
 
+    def __init__(self, schema_information:List[SchemaStructure], root_path):
+        self.schema_information = schema_information
+        self.root_path = os.path.realpath(root_path)
+        self.vocab_path = os.path.join(self.root_path, "vocab")
+        self.properties_file = os.path.join(self.vocab_path, "properties.json")
+        self.types_file = os.path.join(self.vocab_path, "types.json")
+
     def _load_properties(self):
-        if os.path.exists(properties_file):
-            with open(properties_file, "r") as properties_f:
+        if os.path.exists(self.properties_file):
+            with open(self.properties_file, "r") as properties_f:
                 self.properties = json.load(properties_f)
             for p in self.properties:
                 # We want to make sure that only current (not previously existing) schema definitions are reported. This is why we need to clear the array first
@@ -29,8 +34,8 @@ class VocabExtractor(object):
             self.properties = {}
 
     def _load_types(self):
-        if os.path.exists(types_file):
-            with open(types_file, "r") as types_f:
+        if os.path.exists(self.types_file):
+            with open(self.types_file, "r") as types_f:
                 self.types = json.load(types_f)
         else:
             self.types = {}
@@ -70,24 +75,18 @@ class VocabExtractor(object):
     def extract(self):
         self._load_types()
         self._load_properties()
-        expanded_path = os.path.join(root_path, EXPANDED_DIR)
-        for schema_path in glob.glob(os.path.join(expanded_path, f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):
-            relative_schema_path = schema_path[len(expanded_path)+1:-len(SCHEMA_FILE_ENDING)]
-            with open(schema_path, "r") as schema_file:
+        for schema_info in self.schema_information:
+            with open(schema_info.absolute_path, "r") as schema_file:
                 schema = json.load(schema_file)
             type = schema[TEMPLATE_PROPERTY_TYPE]
             self._handle_type(type)
             if "properties" in schema:
                 for p in schema["properties"]:
-                    self._handle_property(p, relative_schema_path, schema["properties"][p])
+                    self._handle_property(p, schema_info.get_relative_path_for_expanded(), schema["properties"][p])
         self._cleanup_types()
         self._cleanup_properties()
-
-        with open(types_file, "w") as types_f:
+        with open(self.types_file, "w") as types_f:
             types_f.write(json.dumps(self.types, sort_keys=True, indent=4))
-        with open(properties_file, "w") as properties_f:
+        with open(self.properties_file, "w") as properties_f:
             properties_f.write(json.dumps(self.properties, sort_keys=True, indent=4))
-
-
-if __name__ == "__main__":
-    VocabExtractor().extract()
+        return self.types_file, self.properties_file
