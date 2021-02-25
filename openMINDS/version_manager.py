@@ -26,7 +26,6 @@ class Version_Manager:
 
 
     def extract(self, folder, file_name):
-        print(folder)
         with zipfile.ZipFile(file_name, 'r') as zip_ref:
             zip_ref.extractall(folder)
 
