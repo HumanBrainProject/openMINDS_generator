@@ -81,7 +81,6 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
 def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
-    print(schema_dictionary)
     for property in schema_dictionary["properties"]:
         get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
 
