@@ -78,10 +78,11 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
     return constructor_string
 
 
-def _build_get_dict_string(properties):
+def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
-    for property in properties["normal"]:
+    print(schema_dictionary)
+    for property in schema_dictionary["properties"]:
         get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
@@ -301,7 +302,7 @@ def generate(schema):
     class_dictionary.update(getter_functions)
 
     class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
-    class_dictionary["get_dict"] = build_get_dict(properties)
+    class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
     class_dictionary["save"] = build_save(schema["name"])
 
     return type(schema["name"], (object,), class_dictionary)
