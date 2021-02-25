@@ -20,7 +20,7 @@ class Helper:
         At the moment we only support the current versions of the schemas.
         '''
 
-        # Get the version information
+        # Get the version information from local cache
         version_information = openMINDS.version_manager.Version_Manager().get_version(version)
         print(version_information)
 
