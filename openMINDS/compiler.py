@@ -24,7 +24,6 @@ class Helper:
         version_information = openMINDS.version_manager.Version_Manager().get_version(version)
 
         # Set up the folder for schema discovery
-        working_dir = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
         core_folder = version_information["core"]
         sands_folder = version_information["sands"]
 
