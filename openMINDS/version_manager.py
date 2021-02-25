@@ -11,7 +11,7 @@ class Version_Manager:
         http = urllib3.PoolManager()
         response = http.request('GET', url)
         datatowrite = response.data
-        
+
         download_folder = self.cache_dir + "/" + version_name + "/"
         pathlib.Path(download_folder).mkdir(parents=True, exist_ok=True)
         download_file = download_folder + version_name + ".zip"
