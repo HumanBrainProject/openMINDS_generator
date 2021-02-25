@@ -22,14 +22,10 @@ class Helper:
 
         # Get the version information from local cache
         version_information = openMINDS.version_manager.Version_Manager().get_version(version)
-
-        # Set up the folder for schema discovery
-        core_folder = version_information["core"]
-        sands_folder = version_information["sands"]
-
+        
         # Discover schemas available in the folders defined above
-        self.core = Schema_Discovery(core_folder, "core")
-        self.SANDS = Schema_Discovery(sands_folder, "SANDS")
+        self.core = Schema_Discovery(version_information["core"], "core")
+        self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
 
 
     def get_container(self):
