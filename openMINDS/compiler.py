@@ -26,7 +26,7 @@ class Helper:
         self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
 
 
-    def get_container(self):
+    def create_container(self):
         class_dictionary = {}
         class_dictionary["__init__"] = openMINDS.MetaSchemaContainer.build_constructor()
         class_dictionary["save"] = openMINDS.MetaSchemaContainer.build_save()
