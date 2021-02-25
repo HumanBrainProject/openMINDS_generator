@@ -53,12 +53,12 @@ class Version_Manager:
 
         self.download_and_extract()
 
-        def get_version(self, version_name):
-            return_version_info = {}
-            try:
-                return_version_info["core"] = self.versions[version_name]["core"]
-                return_version_info["sands"] = self.versions[version_name]["sands"]
+    def get_version(self, version_name):
+        return_version_info = {}
+        try:
+            return_version_info["core"] = self.versions[version_name]["core"]
+            return_version_info["sands"] = self.versions[version_name]["sands"]
 
-                return return_version_info
-            except:
-                print("Version not found")
+            return return_version_info
+        except:
+            print("Version not found")
