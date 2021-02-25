@@ -46,8 +46,9 @@ class Version_Manager:
             },
             "v1.0.0": {
                 "url": "https://github.com/HumanBrainProject/openMINDS/releases/download/v1.0.0/openMINDS_v1.0.0.zip",
-                "core": "v1.0.0/core/v3/schema.json"
-                }
+                "core": "v1.0.0/core/v3/schema.json",
+                "sands": "v1.0.0/SANDS/v1/schemas.json"
+            }
         }
 
         self.download_and_extract()
