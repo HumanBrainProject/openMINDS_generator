@@ -16,13 +16,11 @@ class Helper:
     def __init__(self, version="v1.0.0"):
         '''
         Generate the objects that allow schema discovery.
-
-        At the moment we only support the current versions of the schemas.
         '''
 
         # Get the version information from local cache
         version_information = openMINDS.version_manager.Version_Manager().get_version(version)
-        
+
         # Discover schemas available in the folders defined above
         self.core = Schema_Discovery(version_information["core"], "core")
         self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
