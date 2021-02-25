@@ -12,7 +12,6 @@ class Version_Manager:
         #response = http.request('GET', self.versions["v1.0.0"])
         response = http.request('GET', url)
         datatowrite = response.data
-        print(datatowrite)
 
         download_folder = self.cache_dir + "/" + version_name + "/"
         pathlib.Path(download_folder).mkdir(parents=True, exist_ok=True)
