@@ -1,5 +1,5 @@
 import os
-import openMINDS.MetaSchemaContainer
+import openMINDS.MetaSchemaCollection
 import openMINDS.version_manager
 
 from openMINDS.schema_discovery import Schema_Discovery
@@ -26,18 +26,18 @@ class Helper:
         self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
 
 
-    def create_container(self):
+    def create_collection(self):
         class_dictionary = {}
-        class_dictionary["__init__"] = openMINDS.MetaSchemaContainer.build_constructor()
-        class_dictionary["save"] = openMINDS.MetaSchemaContainer.build_save()
-        class_dictionary["get"] = openMINDS.MetaSchemaContainer.build_get()
+        class_dictionary["__init__"] = openMINDS.MetaSchemaCollection.build_constructor()
+        class_dictionary["save"] = openMINDS.MetaSchemaCollection.build_save()
+        class_dictionary["get"] = openMINDS.MetaSchemaCollection.build_get()
 
         for schema in self.core.schemas:
-            signature, func = openMINDS.MetaSchemaContainer.build_adder(self.core.schemas[schema])
+            signature, func = openMINDS.MetaSchemaCollection.build_adder(self.core.schemas[schema])
             class_dictionary[signature] = func
-            signature, func = openMINDS.MetaSchemaContainer.build_generator(self.core.schemas[schema])
+            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.core.schemas[schema])
             class_dictionary[signature] = func
-            signature, func = openMINDS.MetaSchemaContainer.build_help(self.core.schemas[schema])
+            signature, func = openMINDS.MetaSchemaCollection.build_help(self.core.schemas[schema])
             class_dictionary[signature] = func
 
-        return type("MetaSchemaContainer", (object,), class_dictionary)(self.core, self.SANDS)
+        return type("MetaSchemaCollection", (object,), class_dictionary)(self.core, self.SANDS)
