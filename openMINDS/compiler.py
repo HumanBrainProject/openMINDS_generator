@@ -22,7 +22,6 @@ class Helper:
 
         # Get the version information from local cache
         version_information = openMINDS.version_manager.Version_Manager().get_version(version)
-        print(version_information)
 
         # Set up the folder for schema discovery
         working_dir = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
