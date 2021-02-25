@@ -96,7 +96,9 @@ def _build_save_string(schema_name):
     save_string += '\tfile_name = output_folder + self.type_name + "/" + str(self.UUID)\n'
     save_string += '\twith open(file_name, "w") as outfile:\n'
     save_string += '\t\timport json\n'
-    save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
+    save_string += '\t\tdata = {k:v for (k,v) in self.get_dict().items() if v != None}\n'
+    save_string += '\t\tdata["@context"] = {"@vocab": "https://openminds.ebrains.eu/vocab/"}\n'
+    save_string += "\t\tjson.dump(data, outfile)\n"
 
     return save_string
 
