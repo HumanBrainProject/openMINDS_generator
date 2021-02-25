@@ -9,7 +9,6 @@ class Version_Manager:
 
     def download(self, version_name, url):
         http = urllib3.PoolManager()
-        #response = http.request('GET', self.versions["v1.0.0"])
         response = http.request('GET', url)
         datatowrite = response.data
 
