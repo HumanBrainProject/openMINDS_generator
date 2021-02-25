@@ -1,5 +1,6 @@
 import os
 import openMINDS.MetaSchemaContainer
+import openMINDS.version_manager
 
 from openMINDS.schema_discovery import Schema_Discovery
 
@@ -12,17 +13,21 @@ class Helper:
     and SANDS.
     '''
 
-    def __init__(self):
+    def __init__(self, version="v1.0.0"):
         '''
         Generate the objects that allow schema discovery.
 
         At the moment we only support the current versions of the schemas.
         '''
 
+        # Get the version information
+        version_information = openMINDS.version_manager.Version_Manager().get_version(version)
+        print(version_information)
+
         # Set up the folder for schema discovery
         working_dir = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
-        core_folder = working_dir + "/target/schema.json/core/schemas/v3/"
-        sands_folder = working_dir + "/target/schema.json/SANDS/schemas/v1/"
+        core_folder = version_information["core"]
+        sands_folder = version_information["sands"]
 
         # Discover schemas available in the folders defined above
         self.core = Schema_Discovery(core_folder, "core")
