@@ -41,8 +41,9 @@ class Version_Manager:
         self.versions = {
             "dev": {
                 "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/dev.zip",
-                "core": "dev/schema.json/core/schemas/v3"
-                },
+                "core": "dev/schema.json/core/schemas/v3",
+                "sands": "dev/schema.json/SANDS/schemas/v1"
+            },
             "v1.0.0": {
                 "url": "https://github.com/HumanBrainProject/openMINDS/releases/download/v1.0.0/openMINDS_v1.0.0.zip",
                 "core": "v1.0.0/core/v3/schema.json"
