@@ -5,9 +5,9 @@
 </head>
 <body>
     <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
-    <h4>{{ _type }} - <a href="{{ schemaId }}">JSON Schema</a></h4>
+    <h4>{{ _type }} - view as <a href="{{ schemaId }}">JSON Schema</a></h4>
     <table class="properties">
-        <tr class="header"><td class="property">property name*</td><td>description</td><td>expected value type</td><td>instructions</td></tr>
+        <tr class="header"><td class="property">property name*</td><td>property description</td><td>expected value type</td><td>instruction for value</td></tr>
         {% for property, propertyValue in properties.items() %}
         <tr>
             <td class="property nowrap">{{ property }}</td>
