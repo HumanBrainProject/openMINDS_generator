@@ -6,20 +6,29 @@
 <body>
     <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
     <h4>{{ _type }} - view as <a href="{{ schemaId }}">JSON Schema</a></h4>
+    <div>Required properties are highlighted in <span style="font-weight:bold">bold</span></div>
+
     <table class="properties">
-        <tr class="header"><td class="property">property name*</td><td>property description</td><td>expected value type</td><td>instruction for value</td></tr>
+        <tr class="header"><td class="property" colspan="2">property</td><td colspan="2">value</td></tr>
+        <tr class="header"><td class="property">name*</td><td>description</td><td>type</td><td>instruction</td></tr>
         {% for property, propertyValue in properties.items() %}
         <tr>
-            <td class="property nowrap">{{ property }}</td>
+            <td class="property nowrap"><span {% if propertyValue['is_required'] %}style="font-weight:bold"{% endif %}>{{ property }}</span></td>
             <td>{{propertyValue["description"]}}</td>
-            <td>{% for type in propertyValue["typeInformation"] %}{% if "url" in type %}<a href="{{ type['url'] }}">{{type['label']}}</a>{% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
+            <td>
+                {% if propertyValue['embedded'] %}embedded {% endif %}
+                {% if propertyValue['linked'] %}link to {% endif %}
+                {% for type in propertyValue["typeInformation"] %}{% if "url" in type %}
+                <a href="{{ type['url'] }}">{{type['label']}}</a>
+                {% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
             <td>{{propertyValue["_instruction"]}}</td>
         </tr>
         {% endfor %}
-
     </table>
-    <div style="margin-top: 2em;">*This is the simplified property name - within a metadata instance of this schema (JSON-LD) the properties are extended to map to the openMINDS vocabulary namespace (<span style="font-weight: bold">"https://openminds.ebrains.eu/vocab/PROPERTY"</span>). To learn more please go to: 
-<a href="https://wiki.ebrains.eu/bin/view/Collabs/openminds/openMINDS%20core/Application%20details/">EBRAINS Collaboratory: openMINDS - Documentation/Application details</a></div>
+
+    <div style="margin-top: 2em;">*This is the simplified property name - within a metadata instance of this schema (JSON-LD) the properties are extended to map to the openMINDS vocabulary namespace (<span style="font-weight: bold">"https://openminds.ebrains.eu/vocab/PROPERTY_NAME"</span>).
+        <!-- To learn more please go to:
+<a href="https://wiki.ebrains.eu/bin/view/Collabs/openminds/openMINDS%20core/Application%20details/" target="_blank">EBRAINS Collaboratory: openMINDS - Documentation/Application details</a>--></div>
 </body>
 
 </html>
