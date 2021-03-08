@@ -18,10 +18,10 @@
             <td>
                 {% if propertyValue['embedded'] %} embedded object{% endif %}
                 {% if propertyValue['linked'] %} linked object{% endif %}
-                {% if propertyValue['is_array'] %} array {{propertyValue['cardinality']}} of type:{% endif %}
+                {% if propertyValue['is_array'] %} array {{propertyValue['cardinality']}} of type:<br/>{% endif %}
                 {% for expectedValue in propertyValue["typeInformation"] %}{% if "url" in expectedValue %}
                 <a href="{{expectedValue['url']}}">{{expectedValue['label']}}</a>
-                {% else %}{{expectedValue['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
+                {% else %}{{expectedValue['label']}}{% endif %}{% if not loop.last %} OR <br/> {% endif %}{% endfor %}</td>
             <td>{{propertyValue["_instruction"]}}</td>
         </tr>
         {% endfor %}
