@@ -16,11 +16,12 @@
             <td class="property nowrap"><span {% if propertyValue['is_required'] %}style="font-weight:bold"{% endif %}>{{ property }}</span></td>
             <td>{{propertyValue["description"]}}</td>
             <td>
-                {% if propertyValue['embedded'] %}embedded object ({% endif %}
-                {% if propertyValue['linked'] %}linked object ({% endif %}
-                {% for type in propertyValue["typeInformation"] %}{% if "url" in type %}
-                <a href="{{ type['url'] }}">{{type['label']}}</a>
-                {% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %})</td>
+                {% if propertyValue['embedded'] %} embedded object{% endif %}
+                {% if propertyValue['linked'] %} linked object{% endif %}
+                {% if propertyValue['is_array'] %} array {{propertyValue['cardinality']}} of type:{% endif %}
+                {% for expectedValue in propertyValue["typeInformation"] %}{% if "url" in expectedValue %}
+                <a href="{{expectedValue['url']}}">{{expectedValue['label']}}</a>
+                {% else %}{{expectedValue['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
             <td>{{propertyValue["_instruction"]}}</td>
         </tr>
         {% endfor %}
