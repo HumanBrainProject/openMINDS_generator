@@ -41,13 +41,13 @@ class Helper:
             signature, func = openMINDS.MetaSchemaCollection.build_help(self.core.schemas[schema])
             class_dictionary[signature] = func
 
-        #for schema in self.SANDS.schemas:
-        #    signature, func = openMINDS.MetaSchemaCollection.build_adder(self.SANDS.schemas[schema])
-        #    class_dictionary[signature] = func
-        #    signature, func = openMINDS.MetaSchemaCollection.build_generator(self.SANDS.schemas[schema], substructure=False)
-        #    class_dictionary[signature] = func
-        #    signature, func = openMINDS.MetaSchemaCollection.build_help(self.SANDS.schemas[schema], substructure=False)
-        #    class_dictionary[signature] = func
+        for schema in self.SANDS.schemas:
+            signature, func = openMINDS.MetaSchemaCollection.build_adder(self.SANDS.schemas[schema])
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.SANDS.schemas[schema], substructure=False)
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_help(self.SANDS.schemas[schema], substructure=False)
+            class_dictionary[signature] = func
 
         for schema in self.controlledTerms.schemas:
             signature, func = openMINDS.MetaSchemaCollection.build_adder(self.controlledTerms.schemas[schema])
