@@ -52,7 +52,7 @@ class Helper:
         for schema in self.controlledTerms.schemas:
             signature, func = openMINDS.MetaSchemaCollection.build_adder(self.controlledTerms.schemas[schema])
             class_dictionary[signature] = func
-            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.controlledTerms.schemas[schema])
+            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.controlledTerms.schemas[schema], substructure=False)
             class_dictionary[signature] = func
             signature, func = openMINDS.MetaSchemaCollection.build_help(self.controlledTerms.schemas[schema])
             class_dictionary[signature] = func
