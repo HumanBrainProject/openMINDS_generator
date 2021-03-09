@@ -24,6 +24,7 @@ class Helper:
         # Discover schemas available in the folders defined above
         self.core = Schema_Discovery(version_information["core"], "core")
         self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
+        self.controlledTerms = Schema_Discovery(version_information["controlledTerms"], "controlledTerms")
 
 
     def create_collection(self):
@@ -38,6 +39,22 @@ class Helper:
             signature, func = openMINDS.MetaSchemaCollection.build_generator(self.core.schemas[schema])
             class_dictionary[signature] = func
             signature, func = openMINDS.MetaSchemaCollection.build_help(self.core.schemas[schema])
+            class_dictionary[signature] = func
+
+        for schema in self.SANDS.schemas:
+            signature, func = openMINDS.MetaSchemaCollection.build_adder(self.SANDS.schemas[schema])
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.SANDS.schemas[schema], substructure=False)
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_help(self.SANDS.schemas[schema], substructure=False)
+            class_dictionary[signature] = func
+
+        for schema in self.SANDS.schemas:
+            signature, func = openMINDS.MetaSchemaCollection.build_adder(self.controlledTerms.schemas[schema])
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_generator(self.controlledTerms.schemas[schema])
+            class_dictionary[signature] = func
+            signature, func = openMINDS.MetaSchemaCollection.build_help(self.controlledTerms.schemas[schema])
             class_dictionary[signature] = func
 
         return type("MetaSchemaCollection", (object,), class_dictionary)(self.core, self.SANDS)

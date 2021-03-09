@@ -1,5 +1,4 @@
 import os
-import git
 import urllib3
 import tempfile
 import pathlib
@@ -42,12 +41,15 @@ class Version_Manager:
             "dev": {
                 "url": "https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/dev.zip",
                 "core": "dev/schema.json/core/schemas/v3",
-                "sands": "dev/schema.json/SANDS/schemas/v1"
+                "sands": "dev/schema.json/SANDS/schemas/v1",
+                "controlledTerms": "dev/schema.json/controlledTerms/schemas/v1"
+                
             },
             "v1.0.0": {
                 "url": "https://github.com/HumanBrainProject/openMINDS/releases/download/v1.0.0/openMINDS_v1.0.0.zip",
                 "core": "v1.0.0/core/v3/schema.json",
-                "sands": "v1.0.0/SANDS/v1/schemas.json"
+                "sands": "v1.0.0/SANDS/v1/schemas.json",
+                "controlledTerms": "dev/schema.json/controlledTerms/schemas/v1"
             }
         }
 
@@ -58,7 +60,8 @@ class Version_Manager:
         try:
             return_version_info["core"] = self.cache_dir + "/" + self.versions[version_name]["core"]
             return_version_info["sands"] = self.cache_dir + "/" + self.versions[version_name]["sands"]
-
+            return_version_info["controlledTerms"] = self.cache_dir + "/" + self.versions[version_name]["controlledTerms"]
+            
             return return_version_info
             
         except Exception as e:

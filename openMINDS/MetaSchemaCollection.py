@@ -40,9 +40,13 @@ def build_adder(schema_dict):
     return(signature,(d[signature]))
 
 
-def _build_generator_string(schema_dict):
+def _build_generator_string(schema_dict, substructure=True):
     required_properties = get_constructor_params(schema_dict)
-    signature = schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
+
+    if substructure:
+        signature = schema_dict["namespace"] + "_" + schema_dict["substructure"] + "_" + schema_dict["name"]
+    else:
+        signature = schema_dict["namespace"] + "_" + schema_dict["name"]
 
     function_string = "def " + signature + "(self, " + required_properties + "):\n"
     function_string += "\timport openMINDS.python_compiler\n"
@@ -51,9 +55,9 @@ def _build_generator_string(schema_dict):
 
     return (signature, function_string)
 
-def build_generator(schema_dict):
+def build_generator(schema_dict, substructure=True):
     d = {}
-    signature, function_string = _build_generator_string(schema_dict)
+    signature, function_string = _build_generator_string(schema_dict, substructure)
     exec(function_string, d)
 
     return(signature,(d[signature]))
@@ -102,11 +106,15 @@ def build_get():
     return(d['get'])
 
 
-def _build_help_string(schema):
+def _build_help_string(schema, substructure=True):
     with open(schema["filename"],'r') as f:
         schema_dictionary = json.loads(f.read())
 
-        signature = schema["namespace"] + "_" + schema["substructure"] + "_" + schema["name"]
+        if substructure:
+            signature = schema["namespace"] + "_" + schema["substructure"] + "_" + schema["name"]
+        else:
+            signature = schema["namespace"] + "_" + schema["name"]
+            
         signature = "help_" + signature
         function_string = "def " + signature + "(self):\n"
 
@@ -140,9 +148,9 @@ def _build_help_string(schema):
         func = {"signature": signature, "function_string": function_string}
         return func
 
-def build_help(schema):
+def build_help(schema, substructure=True):
     d = {}
-    func = _build_help_string(schema)
+    func = _build_help_string(schema, substructure)
     exec(func["function_string"], d)
 
     return(func["signature"], d[func["signature"]])
