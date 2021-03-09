@@ -54,7 +54,7 @@ class Helper:
             class_dictionary[signature] = func
             signature, func = openMINDS.MetaSchemaCollection.build_generator(self.controlledTerms.schemas[schema], substructure=False)
             class_dictionary[signature] = func
-            signature, func = openMINDS.MetaSchemaCollection.build_help(self.controlledTerms.schemas[schema])
+            signature, func = openMINDS.MetaSchemaCollection.build_help(self.controlledTerms.schemas[schema], substructure=False)
             class_dictionary[signature] = func
 
         return type("MetaSchemaCollection", (object,), class_dictionary)(self.core, self.SANDS)
