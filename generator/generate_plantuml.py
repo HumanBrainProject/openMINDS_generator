@@ -30,8 +30,8 @@ class PlantUMLGenerator(JinjaGenerator):
                     propertyValue["typeInformation"].append({"embedded": True, "type": os.path.basename(embeddedType)})
         return schema
 
-    def generate(self):
-        super().generate()
+    def generate(self, ignore=None):
+        super().generate(ignore=ignore)
         overall = "@startuml\n"
         for written_file in self.written_files:
             with open(written_file, "r") as file:

@@ -94,8 +94,8 @@ class HTMLGenerator(JinjaGenerator):
         return group_schema
 
 
-    def generate(self):
-        super().generate()
+    def generate(self, ignore=None):
+        super().generate(ignore=ignore)
         group_templ = self.env.get_template("group_template.html")
         for group in self.schema_collection_by_group.keys():
             group_schema = self._create_model_for_groups(group)
