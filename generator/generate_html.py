@@ -38,38 +38,57 @@ class HTMLGenerator(JinjaGenerator):
             property_value["is_required"] =  property in schema["required"] if "required" in schema else False
             property_value["embedded"] = False
             property_value["linked"] = False
-            if TEMPLATE_PROPERTY_LINKED_TYPES in property_value:
-                property_value["typeInformation"] = []
-                property_value["linked"] = True
-                for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
-                    linked_type_info = self.schema_information_by_type[linked_type]
-                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
-                                                             "label": os.path.basename(linked_type)})
-            elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
-                property_value["typeInformation"] = []
-                property_value["embedded"] = True
-                for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
-                    embedded_type_info = self.schema_information_by_type[embedded_type]
-                    property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
-                                                             "label": f"{os.path.basename(embedded_type)}"})
-            elif "type" in property_value and "_formats" in property_value:
-                property_value["typeInformation"] = [{"label": f"{property_value['type']} (format: {' or '.join(property_value['_formats'])})"}]
-            elif "type" in property_value and "items" in property_value:
-                if "type" in property_value["items"]:
-                    label = f" of {property_value['items']['type']}"
+            property_value["is_array"] = False
+            property_value["typeInformation"] = []
+            if "type" in property_value and property_value["type"] == "array":
+                property_value["is_array"] = True
+                property_value["cardinality"] = f"({property_value['minItems'] if 'minItems' in property_value else 0} - {property_value['maxItems'] if 'maxItems' in property_value else 'n'})"
+                if "items" in property_value:
+                    if "type" in property_value["items"]:
+                        label = f"{property_value['items']['type']}"
+                    else:
+                        label = ""
+                    if '_formats' in property_value['items']:
+                        formats = f" (format: {' or '.join(property_value['items']['_formats'])})"
+                    else:
+                        formats = ""
+                    property_value["typeInformation"].append({"label": f"{label}{formats}"})
+                elif TEMPLATE_PROPERTY_LINKED_TYPES in property_value:
+                    property_value["linked"] = True
+                    for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
+                        linked_type_info = self.schema_information_by_type[linked_type]
+                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
+                                                                 "label": os.path.basename(linked_type)})
+                elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
+                    property_value["embedded"] = True
+                    for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
+                        embedded_type_info = self.schema_information_by_type[embedded_type]
+                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
+                                                                 "label": f"{os.path.basename(embedded_type)}"})
                 else:
-                    label = ""
-
-                if '_formats' in property_value['items']:
-                    formats = f" (format: {' or '.join(property_value['items']['_formats'])})"
+                    property_value["typeInformation"].append({"label": "unknown"})
+            elif "type" in property_value and property_value["type"] != "array":
+                if "_formats" in property_value:
+                    property_value["typeInformation"].append({"label": f"{property_value['type']} (format: {' or '.join(property_value['_formats'])})"})
                 else:
-                    formats = ""
-                cardinality = f"{property_value['minItems'] if 'minItems' in property_value else 0} - {property_value['maxItems'] if 'maxItems' in property_value else 'n'}"
-                property_value["typeInformation"] = [{"label": f"array ({cardinality}){label}{formats}"}]
-            elif "type" in property_value:
-                property_value["typeInformation"] = [{"label": property_value['type']}]
+                    property_value["typeInformation"].append({"label": property_value['type']})
+            elif "type" not in property_value:
+                if TEMPLATE_PROPERTY_LINKED_TYPES in property_value:
+                    property_value["linked"] = True
+                    for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
+                        linked_type_info = self.schema_information_by_type[linked_type]
+                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
+                                                                 "label": os.path.basename(linked_type)})
+                elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
+                    property_value["embedded"] = True
+                    for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
+                        embedded_type_info = self.schema_information_by_type[embedded_type]
+                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
+                                                                 "label": f"{os.path.basename(embedded_type)}"})       
+                else:
+                    property_value["typeInformation"].append({"label": "unknown"})                
             else:
-                property_value["typeInformation"] = [{"label": "unknown"}]
+                property_value["typeInformation"].append({"label": "unknown"})
         if schema["schemaGroup"] not in self.schema_collection_by_group:
             self.schema_collection_by_group[schema["schemaGroup"]] = []
         self.schema_collection_by_group[schema["schemaGroup"]].append(schema_information)
