@@ -38,11 +38,21 @@ class SchemaStructure:
         return f"{self.schema_group}/{self.version}/{self.file}"
 
 
-def find_resource_directories(schema_root_path):
+def find_resource_directories(schema_root_path, ignore=None):
+    def ignore_dir(path):
+        if ignore:
+            for ignore_name in ignore:
+                if ignore_name in path:
+                    return True
+        return False
+
     resource_directories = set()
     for schema_source in glob.glob(os.path.join(schema_root_path, f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):
         schema_resource_dir = os.path.dirname(schema_source)[len(schema_root_path)+1:]
-        if "target" not in schema_resource_dir and EXPANDED_DIR not in schema_resource_dir:
+        if ("target" not in schema_resource_dir
+            and EXPANDED_DIR not in schema_resource_dir
+            and not ignore_dir(schema_resource_dir)
+        ):
             path_split = schema_resource_dir.split("/")
             if len(path_split) == 1:
                 resource_directories.add(path_split[0])
@@ -81,12 +91,12 @@ class Generator(object):
         self.target_path = os.path.join(TARGET_PATH, self.format)
         self.written_files = []
 
-    def generate(self):
+    def generate(self, ignore=None):
         if os.path.exists(self.target_path):
             print("clearing previously generated files")
             shutil.rmtree(self.target_path)
         expanded_path = os.path.join(ROOT_PATH, EXPANDED_DIR)
-        for schema_group in find_resource_directories(expanded_path):
+        for schema_group in find_resource_directories(expanded_path, ignore=ignore):
             print(f"handle {schema_group}")
             schema_group_path = os.path.join(expanded_path, schema_group)
             for schema_path in glob.glob(os.path.join(schema_group_path, f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):

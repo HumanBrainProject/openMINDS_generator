@@ -12,10 +12,10 @@ DEEP_MERGE_PROPERTIES = ["properties", "required"]
 
 class Expander(object):
 
-    def __init__(self, path_to_schemas):
+    def __init__(self, path_to_schemas, ignore=None):
         self.schema_root_path = os.path.realpath(path_to_schemas)
         self.get_absolute_expanded_dir = Expander.get_absolute_expanded_dir()
-        self.schemas = self._find_schemas()
+        self.schemas = self._find_schemas(ignore=ignore)
         self._schemas_by_category = Expander._schemas_by_category(self.schemas)
 
     @staticmethod
@@ -82,9 +82,9 @@ class Expander(object):
                     result[c].append(s.type)
         return result
 
-    def _find_schemas(self) -> List[SchemaStructure]:
+    def _find_schemas(self, ignore=None) -> List[SchemaStructure]:
         schema_information = []
-        for schema_group in find_resource_directories(self.schema_root_path):
+        for schema_group in find_resource_directories(self.schema_root_path, ignore=ignore):
             group_name = schema_group.split("/")[0]
             with open(os.path.join(self.schema_root_path, group_name, "version.txt"), "r") as version_file:
                 version = version_file.read().strip()
