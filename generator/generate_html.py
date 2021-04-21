@@ -56,15 +56,25 @@ class HTMLGenerator(JinjaGenerator):
                 elif TEMPLATE_PROPERTY_LINKED_TYPES in property_value:
                     property_value["linked"] = True
                     for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
-                        linked_type_info = self.schema_information_by_type[linked_type]
-                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
-                                                                 "label": os.path.basename(linked_type)})
+                        if linked_type in self.schema_information_by_type:
+                            linked_type_info = self.schema_information_by_type[linked_type]
+                            property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
+                                                                     "label": os.path.basename(linked_type)})
+                        else:
+                            property_value["typeInformation"].append({"url": None,
+                                                                      "label": f"Unknown type: {linked_type}"})
+
                 elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
                     property_value["embedded"] = True
                     for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
-                        embedded_type_info = self.schema_information_by_type[embedded_type]
-                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
-                                                                 "label": f"{os.path.basename(embedded_type)}"})
+                        if embedded_type in self.schema_information_by_type:
+                            embedded_type_info = self.schema_information_by_type[embedded_type]
+                            property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
+                                                                     "label": f"{os.path.basename(embedded_type)}"})
+                        else:
+                            property_value["typeInformation"].append({"url": None,
+                                                                  "label": f"Unknown type: {embedded_type}"})
+
                 else:
                     property_value["typeInformation"].append({"label": "unknown"})
             elif "type" in property_value and property_value["type"] != "array":
@@ -76,15 +86,23 @@ class HTMLGenerator(JinjaGenerator):
                 if TEMPLATE_PROPERTY_LINKED_TYPES in property_value:
                     property_value["linked"] = True
                     for linked_type in property_value[TEMPLATE_PROPERTY_LINKED_TYPES]:
-                        linked_type_info = self.schema_information_by_type[linked_type]
-                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
-                                                                 "label": os.path.basename(linked_type)})
+                        if linked_type in self.schema_information_by_type:
+                            linked_type_info = self.schema_information_by_type[linked_type]
+                            property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, linked_type_info),
+                                                                     "label": os.path.basename(linked_type)})
+                        else:
+                            property_value["typeInformation"].append({"url": None,
+                                                                      "label": f"Unknown type: {linked_type}"})
                 elif TEMPLATE_PROPERTY_EMBEDDED_TYPES in property_value:
                     property_value["embedded"] = True
                     for embedded_type in property_value[TEMPLATE_PROPERTY_EMBEDDED_TYPES]:
-                        embedded_type_info = self.schema_information_by_type[embedded_type]
-                        property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
-                                                                 "label": f"{os.path.basename(embedded_type)}"})       
+                        if embedded_type in self.schema_information_by_type:
+                            embedded_type_info = self.schema_information_by_type[embedded_type]
+                            property_value["typeInformation"].append({"url": self._schema_info_to_rel_html_url(schema_information, embedded_type_info),
+                                                                     "label": f"{os.path.basename(embedded_type)}"})
+                        else:
+                            property_value["typeInformation"].append({"url": None,
+                                                                      "label": f"Unknown type: {embedded_type}"})
                 else:
                     property_value["typeInformation"].append({"label": "unknown"})                
             else:
