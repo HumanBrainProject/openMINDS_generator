@@ -1,31 +1,53 @@
-# Welcome to openMINDS!
+# openMINDS_generator
 
-This is the repository for the generator scripts of
-[**openMINDS**](https://github.com/HumanBrainProject/openMINDS)
+The **openMINDS_generator** is part of the open Metadata Initiative for Neuroscience Data Structures ([**openMINDS**](https://github.com/HumanBrainProject/openMINDS)). It contains scripts that interpret and extend the openMINDS schema template language as well as translate the openMINDS schema templates to various formal output formats (e.g., HTML and JSON-Schema). 
 
-These scripts allow the generation of the output formats HTML, schema.json and
-python from the template language used to define the openMINDS schemas.
+Moreover, the openMINDS_generator includes a small compiler that enables the dynamic usage of the openMINDS schemas in your Python application for generating your own collection of openMINDS conform metadata representations (instances) as JSON-LDs. 
 
-In addition to this the python compiler allows the dynamic usage of openMINDS
-in your Python appication.
+### Installation
 
-Example:
+The **openMINDS Python API** is also available at the [Pyhton Package Index](https://pypi.org/project/openMINDS/) and can be installed using `pip install` in your console:
 
-    import generator.openminds_helper
-    import generator.python_compiler
+```console
+pip install openMINDS
+```
 
+### Documentation
 
-    helper = generator.openminds_helper.OpenMINDS_helper()
-    copyright = generator.python_compiler.generate(helper.core.DATA__COPYRIGHT)
-    copyright_schema = generator.python_compiler.generate_file(helper.core.DATA__COPYRIGHT)
+#### openMINDS Python API
 
-    copyright_schema.year = 2020
-    copyright_schema.holder = "somebody"
+As stated above, the openMINDS.compiler allows you the dynamic usage of openMINDS metadata models and schemas in your Python application for generating your own collection of openMINDS conform metadata representations (instances) as JSON-LDs. Here a small example:
 
-    copyright_schema.save("test.json")
+```python
+import openMINDS.compiler
 
-This example generates a copyright schema object, for which the values can be
-set and it can be saved as openMINDS conform json.
+# initiate the helper class for the dynamic usage of a specific openMINDS version
+helper = openMINDS.compiler.Helper(version="dev")
+
+# initiate the collection into which you will store all metadata instances
+mycollection = helper.create_collection()
+
+# create a metadata instance for (e.g.) the openMINDS Person schema
+lyuba = mycollection.add_core_person(givenName="Lyuba")
+
+# add more metadata to a created instance
+mycollection.get(lyuba).familyName = "Zehl"
+
+# add connections to other metadata instances
+email_lyuba = mycollection.add_core_contactInformation(email="openminds@ebrains.eu")
+mycollection.get(lyuba).contactInformation = email_lyuba
+
+# save your collection
+mycollection.save("./myFirstOpenMINDSMetadataCollection/")
+```
+
+To learn in general about the available openMINDS metadata models, schemas and their required or optional metadata properties, please go the [main openMINDS GitHub repository](https://github.com/HumanBrainProject/openMINDS), or the full documentation on the EBRAINS Collaboratory (coming soon).
+
+Within the openMINDS.compiler you can also get an overview of the requirement of a schema and all its properties by using the `help_X` function. Here an example:
+
+```python
+mycollection.help_core_person()
+```
 
 ## License
 This work is licensed under the MIT License.
