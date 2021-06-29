@@ -53,9 +53,10 @@ class VocabExtractor(object):
     def _handle_type(self, type, schema):
         if type not in self.types:
             self.types[type] = {"name": _camel_case_to_human_readable(os.path.basename(type)), "description": None, "translatableTo": None, "schemas": []}
-        if "schemas" not in type or not type["schemas"]:
-            type["schemas"] = []
+        if "schemas" not in self.types[type] or not self.types[type]["schemas"]:
+            self.types[type]["schemas"] = []
         self.types[type]["schemas"].append(schema)
+        self.types[type]["schemas"] = sorted(set(self.types[type]["schemas"]))
 
     def extract(self):
         self._load_types()
