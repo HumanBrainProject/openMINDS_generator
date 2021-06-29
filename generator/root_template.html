@@ -56,7 +56,7 @@ cursor: pointer;
 </script>
 <div id="content">
     <div id="navig">
-        <img src="https://github.com/HumanBrainProject/openMINDS/raw/v1/img/openMINDS_logo.png" style="height: 5em;"/>
+        <img src="https://github.com/HumanBrainProject/openMINDS/raw/main/img/openMINDS_logo.png" style="height: 5em;"/>
         {% for module in modules %}<div><h2 onclick="toggleCategory('types{{module['name']}}');">{{ module["name"] }}</h2>
             <div id="types{{module['name']}}" style="display:none;">
                 {% for g in module['types']['typesByCategory'].keys() %}
