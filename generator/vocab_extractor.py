@@ -36,7 +36,7 @@ class VocabExtractor(object):
                 self.types = json.load(types_f)
             if self.reinit:
                 for t in self.types:
-                    t["schemas"] = []
+                    self.types[t]["schemas"] = []
         else:
             self.types = {}
 
