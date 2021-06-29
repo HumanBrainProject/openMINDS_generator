@@ -13,6 +13,8 @@ from generator.vocab_extractor import VocabExtractor
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description='Generate various sources out of the EBRAINS openMINDS schema templates')
 parser.add_argument('--reinit', dest='reinit', action='store_true')
+parser.add_argument('--currentVersion', help="The current version")
+parser.add_argument('--allVersions', help="A comma separated list of all available versions")
 parser.set_defaults(reinit=False)
 parser.add_argument('--path', help="The path to the source", default=".")
 parser.add_argument('--ignore', help="Names of schema groups to ignore", default=[], action='append')
@@ -37,7 +39,7 @@ def main():
     print(f"Generating JSON schemas for...")
     JsonSchemaGenerator(expander.schemas).generate(ignore=args["ignore"])
     print("Generating HTML documentation...")
-    HTMLGenerator(expander.schemas).generate(ignore=args["ignore"])
+    HTMLGenerator(expander.schemas, args["currentVersion"], [x for x in args["allVersions"].split(",") if x]).generate(ignore=args["ignore"])
     print("Generating UML documentation...")
     PlantUMLGenerator(expander.schemas).generate(ignore=args["ignore"])
     # print("Generating Python classes...")

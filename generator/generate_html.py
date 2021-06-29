@@ -7,11 +7,13 @@ from generator.commons import JinjaGenerator, TEMPLATE_PROPERTY_TYPE, \
 
 class HTMLGenerator(JinjaGenerator):
 
-    def __init__(self, schema_information:List[SchemaStructure]):
+    def __init__(self, schema_information:List[SchemaStructure], current_version, all_versions):
         super().__init__("html", ["html", "xml"], "documentation_template.html")
         self.schema_information = schema_information
         self.schema_information_by_type = {}
         self.schema_collection_by_group = {}
+        self.current_version = current_version
+        self.all_versions = all_versions
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "style.css"), "r", encoding="utf-8") as style_file:
             self.style = style_file.read()
         for s in self.schema_information:
@@ -141,6 +143,8 @@ class HTMLGenerator(JinjaGenerator):
                 group_file.write(html)
         root_templ = self.env.get_template("root_template.html")
         root_model = {
+            "currentVersion": self.current_version,
+            "allVersions": sorted(self.all_versions),
             "modules": sorted([{"name": m, "types": self._create_model_for_groups(m)} for m in self.schema_collection_by_group.keys()], key=lambda module: module["name"].casefold()),
             "style": self.style
         }
@@ -151,6 +155,15 @@ class HTMLGenerator(JinjaGenerator):
         default_html = default_content_templ.render(root_model)
         with open(os.path.join(self.target_path, f"default.html"), "w", encoding="utf-8") as default_file:
             default_file.write(default_html)
+
+        central_model = {
+            "allVersions": sorted(self.all_versions),
+            "style": self.style
+        }
+        central_content_templ = self.env.get_template("central_template.html")
+        central_html = central_content_templ.render(central_model)
+        with open(os.path.join(self.target_path, f"central.html"), "w", encoding="utf-8") as central_file:
+            central_file.write(central_html)
 
 if __name__ == "__main__":
     HTMLGenerator([]).generate()
