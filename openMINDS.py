@@ -12,6 +12,8 @@ from generator.generate_python import generate_all_schemas
 from generator.vocab_extractor import VocabExtractor
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description='Generate various sources out of the EBRAINS openMINDS schema templates')
+parser.add_argument('--reinit', dest='reinit', action='store_true')
+parser.set_defaults(reinit=False)
 parser.add_argument('--path', help="The path to the source", default=".")
 parser.add_argument('--ignore', help="Names of schema groups to ignore", default=[], action='append')
 args = vars(parser.parse_args())
@@ -26,7 +28,7 @@ def main():
     expander = Expander(args["path"], ignore=args["ignore"])
     expander.expand()
     print("Extracting the vocab...")
-    types_file, properties_file = VocabExtractor(expander.schemas, args["path"]).extract()
+    types_file, properties_file = VocabExtractor(expander.schemas, args["path"], args["reinit"]).extract()
     expander.enrich_with_vocab(types_file, properties_file)
 
     print("Clear target directory")

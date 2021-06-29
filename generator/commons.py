@@ -13,6 +13,7 @@ TEMPLATE_PROPERTY_FORMATS = "_formats"
 TEMPLATE_PROPERTY_CATEGORIES = "_categories"
 TEMPLATE_PROPERTY_LINKED_CATEGORIES = "_linkedCategories"
 
+OPENMINDS_VOCAB="https://openminds.ebrains.eu/vocab/"
 
 EXPANDED_DIR = "expanded"
 
@@ -36,6 +37,9 @@ class SchemaStructure:
 
     def get_relative_path_for_expanded(self):
         return f"{self.schema_group}/{self.version}/{self.file}"
+
+    def get_schema_name(self):
+        return self.get_relative_path_for_expanded()[0:-len(SCHEMA_FILE_ENDING)]
 
 
 def find_resource_directories(schema_root_path, ignore=None):

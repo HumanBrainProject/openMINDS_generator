@@ -4,7 +4,7 @@ import os
 from typing import List
 
 from generator.commons import TEMPLATE_PROPERTY_TYPE, type_to_schema_url, \
-    TEMPLATE_PROPERTY_LINKED_TYPES, Generator, TEMPLATE_PROPERTY_FORMATS, SchemaStructure, TEMPLATE_PROPERTY_EMBEDDED_TYPES
+    TEMPLATE_PROPERTY_LINKED_TYPES, Generator, TEMPLATE_PROPERTY_FORMATS, SchemaStructure, TEMPLATE_PROPERTY_EMBEDDED_TYPES, OPENMINDS_VOCAB
 from generator.expander import Expander
 
 
@@ -128,10 +128,13 @@ class JsonSchemaGenerator(Generator):
             schema["type"] = "object"
             properties["@type"] = {"type": "string", "const": schema[TEMPLATE_PROPERTY_TYPE]}
 
+
         for property_key in properties:
             self._handle_property(properties[property_key])
 
         self._handle_embedded_links(schema)
+        schema["properties"] = {f"{OPENMINDS_VOCAB}{k}" if not k.startswith("@") else k:v for k, v in schema["properties"].items()}
+
         return json.dumps(schema, indent=4, sort_keys=True)
 
 

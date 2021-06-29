@@ -6,7 +6,8 @@ from json.decoder import JSONDecodeError
 from typing import List
 
 from generator.commons import TEMPLATE_PROPERTY_EXTENDS, TEMPLATE_PROPERTY_TYPE, find_resource_directories, EXPANDED_DIR, SCHEMA_FILE_ENDING, SchemaStructure, \
-    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES
+    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES, OPENMINDS_VOCAB
+
 
 class Expander(object):
 
@@ -39,8 +40,9 @@ class Expander(object):
                 if "name" in t and t["name"]:
                     schema["title"] = t["name"]
             for p in schema["properties"]:
-                if p in properties:
-                    prop = properties[p]
+                qualified_p = f"{OPENMINDS_VOCAB}{p}"
+                if qualified_p in properties:
+                    prop = properties[qualified_p]
                     if "description" in prop and prop["description"]:
                         schema["properties"][p]["description"] = prop["description"]
                     if "name" in prop and prop["name"]:
