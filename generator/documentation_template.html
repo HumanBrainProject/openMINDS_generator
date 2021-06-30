@@ -12,7 +12,7 @@
     <table class="properties">
         <tr class="header"><td class="property" colspan="2">property</td><td colspan="2">value</td></tr>
         <tr class="header"><td class="property">name*</td><td>description</td><td>type</td><td>instruction</td></tr>
-        {% for property, propertyValue in properties.items() %}
+        {% for property, propertyValue in properties %}
         <tr>
             <td class="property nowrap"><span {% if propertyValue['is_required'] %}style="font-weight:bold"{% endif %}>{{ property }}</span></td>
             <td>{{propertyValue["description"]}}</td>

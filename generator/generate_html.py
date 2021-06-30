@@ -39,7 +39,6 @@ class HTMLGenerator(JinjaGenerator):
             schema["instances"] = sorted(self.instances[schema[TEMPLATE_PROPERTY_TYPE]], key=lambda k: k["label"])
             schema["hasOntologicalIdentifiers"] = any(i['ontologyIdentifier'] for i in self.instances[schema[TEMPLATE_PROPERTY_TYPE]])
         sorted_keys = sorted(schema["properties"].keys())
-
         for property in sorted_keys:
             property_value = schema["properties"][property]
             property_value["is_required"] =  property in schema["required"] if "required" in schema else False
@@ -114,6 +113,7 @@ class HTMLGenerator(JinjaGenerator):
                     property_value["typeInformation"].append({"label": "unknown"})                
             else:
                 property_value["typeInformation"].append({"label": "unknown"})
+        schema["properties"] = sorted(schema["properties"].items(), key=lambda k:(not k[1]['is_required'], k[0]))
         if schema["schemaGroup"] not in self.schema_collection_by_group:
             self.schema_collection_by_group[schema["schemaGroup"]] = []
         self.schema_collection_by_group[schema["schemaGroup"]].append(schema_information)
