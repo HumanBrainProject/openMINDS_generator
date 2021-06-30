@@ -45,7 +45,7 @@
             {% if hasOntologicalIdentifiers %}
             <td>{% if instance['ontologyIdentifier'] %}{{ instance['ontologyIdentifier']}}{% endif %}</td>
             {% endif %}
-            <td class="nowrap"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a>
+            <td class="nowrap" style="font-size:0.8em; font-weight: bold;"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a>
                 {% if instance['interlex'] %}, <a href="{{ instance['interlex']}}" target="_blank">Interlex</a>{% endif %}
                 {% if instance['knowledgeSpace'] %}, <a href="{{ instance['knowledgeSpace']}}" target="_blank">Knowledge Space</a>{% endif %}
             </td>
