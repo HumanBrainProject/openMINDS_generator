@@ -134,7 +134,7 @@ class JsonSchemaGenerator(Generator):
 
         self._handle_embedded_links(schema)
         schema["properties"] = {f"{OPENMINDS_VOCAB}{k}" if not k.startswith("@") else k:v for k, v in schema["properties"].items()}
-
+        schema["required"] = [f"{OPENMINDS_VOCAB}{k}" if not k.startswith("@") else k for k in schema["required"]]
         return json.dumps(schema, indent=4, sort_keys=True)
 
 
