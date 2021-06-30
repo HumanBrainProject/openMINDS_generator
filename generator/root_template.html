@@ -76,11 +76,18 @@ padding-top: 0.5em;
     <div id="navig">
         <div id="header">
         <img src="https://github.com/HumanBrainProject/openMINDS/raw/main/img/openMINDS_logo.png" style="height: 5em;"/>
-        <div id="version">Version: <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ currentVersion }}', this.value)">
-            {% for version in allVersions %}
-            <option {% if version == currentVersion %}selected{% endif %}>{{ version }}</option>
+        <div id="version">Version: <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ current }}', this.value)">
+            <option disabled>--- stable --</option>
+             {% for tag in allTags %}
+            <option {% if tag == current %}selected{% endif %} value="{{ tag }}">{{ tag }}</option>
             {% endfor %}
-        </select></div>
+            <option disabled>--- development --</option>
+            {% for version in allVersions %}
+            <option {% if version == current %}selected{% endif %} value="{{ version }}">{{ version }}-dev</option>
+            {% endfor %}
+        </select>
+
+        </div>
             </div>
         {% for module in modules %}<div><h2 onclick="toggleCategory('types{{module['name']}}');">{{ module["name"] }}</h2>
             <div id="types{{module['name']}}" style="display:none;">

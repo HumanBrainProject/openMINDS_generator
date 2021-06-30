@@ -7,13 +7,14 @@ from generator.commons import JinjaGenerator, TEMPLATE_PROPERTY_TYPE, \
 
 class HTMLGenerator(JinjaGenerator):
 
-    def __init__(self, schema_information:List[SchemaStructure], current_version, all_versions):
+    def __init__(self, schema_information:List[SchemaStructure], current, all_version_branches, all_tags):
         super().__init__("html", ["html", "xml"], "documentation_template.html")
         self.schema_information = schema_information
         self.schema_information_by_type = {}
         self.schema_collection_by_group = {}
-        self.current_version = current_version
-        self.all_versions = all_versions
+        self.current = current
+        self.all_version_branches = all_version_branches
+        self.all_tags = all_tags
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "style.css"), "r", encoding="utf-8") as style_file:
             self.style = style_file.read()
         for s in self.schema_information:
@@ -119,16 +120,17 @@ class HTMLGenerator(JinjaGenerator):
             "group": group,
             "style": self.style,
             "typesByCategory": {},
-            "allVersions": self.all_versions,
-            "currentVersion": self.current_version
+            "allTags": sorted(self.all_tags, reverse=True),
+            "allVersions": sorted(self.all_version_branches, reverse=True),
+            "current": self.current
         }
         for schema in self.schema_collection_by_group[group]:
             file_split = schema.file.split('/')
-            category = file_split[0] if len(file_split) > 1 else ""
+            category = f"{file_split[0]} {schema.version}" if len(file_split) > 1 else ""
             if category not in group_schema["typesByCategory"]:
                 group_schema["typesByCategory"][category] = []
             group_schema["typesByCategory"][category].append(
-                {"name": os.path.basename(schema.type), "url": f"{schema.schema_group}/{schema.version}/{schema.file.replace('schema.tpl.json', 'html')}"})
+                {"name": f"{os.path.basename(schema.type)}", "url": f"{schema.schema_group}/{schema.version}/{schema.file.replace('schema.tpl.json', 'html')}"})
 
         for k in group_schema["typesByCategory"]:
             group_schema["typesByCategory"][k] = sorted(group_schema["typesByCategory"][k], key=lambda type: type["name"])
@@ -145,8 +147,9 @@ class HTMLGenerator(JinjaGenerator):
                 group_file.write(html)
         root_templ = self.env.get_template("root_template.html")
         root_model = {
-            "currentVersion": self.current_version,
-            "allVersions": sorted(self.all_versions),
+            "current": self.current,
+            "allTags": sorted(self.all_tags, reverse=True),
+            "allVersions": sorted(self.all_version_branches, reverse=True),
             "modules": sorted([{"name": m, "types": self._create_model_for_groups(m)} for m in self.schema_collection_by_group.keys()], key=lambda module: module["name"].casefold()),
             "style": self.style
         }
@@ -159,7 +162,8 @@ class HTMLGenerator(JinjaGenerator):
             default_file.write(default_html)
 
         central_model = {
-            "allVersions": sorted(self.all_versions),
+            "allTags": sorted(self.all_tags, reverse=True),
+            "allVersions": sorted(self.all_version_branches, reverse=True),
             "style": self.style
         }
         central_content_templ = self.env.get_template("central_template.html")

@@ -13,9 +13,14 @@
 </style>
 </head>
 <body>
-<div id="version"><h2>openMINDS {{group}} <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ currentVersion }}', this.value)">
+<div id="version"><h2>openMINDS {{group}} <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ current }}', this.value)">
+            <option disabled>--- stable --</option>
+             {% for tag in allTags %}
+            <option {% if tag == current %}selected{% endif %} value="{{ tag }}">{{ tag }}</option>
+            {% endfor %}
+            <option disabled>--- development --</option>
             {% for version in allVersions %}
-            <option {% if version == currentVersion %}selected{% endif %}>{{ version }}</option>
+            <option {% if version == current %}selected{% endif %} value="{{ version }}">{{ version }}-dev</option>
             {% endfor %}
 </select></h2></div>
 <div>
