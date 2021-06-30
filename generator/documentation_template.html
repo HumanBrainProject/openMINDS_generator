@@ -32,13 +32,13 @@
 
     <div style="margin-top: 3em;">
          <table class="properties">
-        <tr class="header"><td class="property" colspan="2">instances</td></tr>
+        <tr class="header"><td class="property" colspan="3">instances</td></tr>
         <tr class="header"><td class="property">name</td><td>IRI</td><td>JSON-LD</td></tr>
         {% for instance in instances %}
         <tr>
             <td class="property nowrap">{{ instance['label'] }}</td>
             <td>{{ instance['id']}}</td>
-            <td><a href="{{ instance['githubUrl']}}">{{ instance['relativePath']}}</a></td>
+            <td><a href="{{ instance['githubUrl']}}" target="_blank">{{ instance['relativePath']}}</a></td>
         </tr>
         {% endfor %}
     </table>
