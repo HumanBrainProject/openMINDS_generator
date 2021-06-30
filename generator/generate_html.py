@@ -126,7 +126,7 @@ class HTMLGenerator(JinjaGenerator):
         }
         for schema in self.schema_collection_by_group[group]:
             file_split = schema.file.split('/')
-            category = f"{file_split[0]} {schema.version}" if len(file_split) > 1 else ""
+            category = {file_split[0]} if len(file_split) > 1 else ""
             if category not in group_schema["typesByCategory"]:
                 group_schema["typesByCategory"][category] = []
             group_schema["typesByCategory"][category].append(
