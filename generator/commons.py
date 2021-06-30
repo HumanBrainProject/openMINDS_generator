@@ -93,12 +93,14 @@ class Generator(object):
     def __init__(self, format):
         self.format = format
         self.target_path = os.path.join(TARGET_PATH, self.format)
+
         self.written_files = []
 
     def generate(self, ignore=None):
         if os.path.exists(self.target_path):
             print("clearing previously generated files")
             shutil.rmtree(self.target_path)
+        os.makedirs(self.target_path, exist_ok=True)
         expanded_path = os.path.join(ROOT_PATH, EXPANDED_DIR)
         for schema_group in find_resource_directories(expanded_path, ignore=ignore):
             print(f"handle {schema_group}")
