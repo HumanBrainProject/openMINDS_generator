@@ -1,9 +1,24 @@
 <html>
 <head>
     <title>{{ group }}</title>
-    <style>{{ style|safe }}</style>
+    <style>{{ style|safe }}
+    body {
+        margin: 2em;
+    }
+
+    select{
+        font-size: 1em;
+        padding-left: 1em;
+    }
+</style>
 </head>
 <body>
+<div id="version"><h2>openMINDS {{group}} <select onchange="if (this.value) window.location.href=window.location.href.replaceAll(currentVersion, this.value)">
+            {{ currentVersion }}
+            {% for version in allVersions %}
+            <option {% if version == currentVersion %}selected{% endif %}>{{ version }}</option>
+            {% endfor %}
+</select></h2></div>
 <div>
       <table>
         <tr><td>

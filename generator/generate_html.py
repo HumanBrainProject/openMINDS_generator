@@ -118,7 +118,9 @@ class HTMLGenerator(JinjaGenerator):
         group_schema = {
             "group": group,
             "style": self.style,
-            "typesByCategory": {}
+            "typesByCategory": {},
+            "allVersions": self.all_versions,
+            "currentVersion": self.current_version
         }
         for schema in self.schema_collection_by_group[group]:
             file_split = schema.file.split('/')
