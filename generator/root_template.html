@@ -20,13 +20,17 @@ right: 0;
     flex: 20%;
     max-width: 50em;
 margin: 1em;
+max-height: 100vh;
+overflow: auto;
 }
 
 #frame{
 flex-grow:1;
 width: 100%;
 height: 100%;
+max-height: 90vh;
 margin-top: 3em;
+margin-bottom: 3em;
 }
 
 #frame iframe{
@@ -88,6 +92,9 @@ padding-top: 0.5em;
         </select>
 
         </div>
+                    <div>
+            <a href="../openMINDS-{{ current }}.zip">Download specification</a>
+        </div>
             </div>
         {% for module in modules %}<div><h2 onclick="toggleCategory('types{{module['name']}}');">{{ module["name"] }}</h2>
             <div id="types{{module['name']}}" style="display:none;">
@@ -100,9 +107,7 @@ padding-top: 0.5em;
                 </div>
         </div>
         {% endfor %}
-        <div>
-            <a href="../openMINDS-{{ current }}.zip">Download specification</a>
-        </div>
+
 
     </div>
     <div id="frame">
