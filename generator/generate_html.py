@@ -37,6 +37,7 @@ class HTMLGenerator(JinjaGenerator):
         schema["style"] = self.style
         if schema[TEMPLATE_PROPERTY_TYPE] in self.instances:
             schema["instances"] = sorted(self.instances[schema[TEMPLATE_PROPERTY_TYPE]], key=lambda k: k["label"])
+            schema["hasOntologicalIdentifiers"] = any(i['ontologyIdentifier'] for i in self.instances[schema[TEMPLATE_PROPERTY_TYPE]])
         sorted_keys = sorted(schema["properties"].keys())
 
         for property in sorted_keys:

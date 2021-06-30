@@ -32,13 +32,23 @@
     {% if instances %}
     <div style="margin-top: 3em;">
          <table class="properties">
-        <tr class="header"><td class="property" colspan="3">instances</td></tr>
-        <tr class="header"><td class="property">name</td><td>ID</td><td></td></tr>
+        <tr class="header"><td class="property" colspan="4">instances</td></tr>
+        <tr class="header"><td class="property">name</td><td>ID</td>
+            {% if hasOntologicalIdentifiers %}
+            <td>Ontological identifier</td>
+            {% endif %}
+            <td></td></tr>
         {% for instance in instances %}
         <tr>
             <td class="property nowrap">{{ instance['label'] }}</td>
             <td>{{ instance['id']}}</td>
-            <td class="nowrap"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a></td>
+            {% if hasOntologicalIdentifiers %}
+            <td>{% if instance['ontologyIdentifier'] %}{{ instance['ontologyIdentifier']}}{% endif %}</td>
+            {% endif %}
+            <td class="nowrap"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a>
+                {% if instance['interlex'] %}, <a href="{{ instance['interlex']}}" target="_blank">Interlex</a>{% endif %}
+                {% if instance['knowledgeSpace'] %}, <a href="{{ instance['knowledgeSpace']}}" target="_blank">Knowledge Space</a>{% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
