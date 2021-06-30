@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>{{ simpleTypeName }}</h1>
-    <h2>{{ schemaGroup }} - {{ schemaVersion }}</h2>
+    <h2>{{ schemaGroup }}</h2>
     <h4>{{ _type }} - view as <a href="{{ schemaId }}">JSON Schema</a></h4>
     <div>Required properties are highlighted in <span style="font-weight:bold">bold</span></div>
 
@@ -29,6 +29,25 @@
     </table>
 
     <div style="margin-top: 2em;">*This is the simplified property name - within a metadata instance of this schema (JSON-LD) the properties are extended to map to the openMINDS vocabulary namespace (<span style="font-weight: bold">"https://openminds.ebrains.eu/vocab/PROPERTY_NAME"</span>).
+
+    <div style="margin-top: 3em;">
+         <table class="properties">
+        <tr class="header"><td class="property" colspan="2">instances</td></tr>
+        <tr class="header"><td class="property">name</td><td>IRI</td><td>JSON-LD</td></tr>
+        {% for instance in instances %}
+        <tr>
+            <td class="property nowrap">{{ instance['label'] }}</td>
+            <td>{{ instance['id']}}</td>
+            <td><a href="{{ instance['githubUrl']}}">{{ instance['relativePath']}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+
+
+
+
         <!-- To learn more please go to:
 <a href="https://wiki.ebrains.eu/bin/view/Collabs/openminds/openMINDS%20core/Application%20details/" target="_blank">EBRAINS Collaboratory: openMINDS - Documentation/Application details</a>--></div>
 </body>

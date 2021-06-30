@@ -9,6 +9,7 @@ from generator.generate_html import HTMLGenerator
 from generator.generate_json_schema import JsonSchemaGenerator
 from generator.generate_plantuml import PlantUMLGenerator
 from generator.generate_python import generate_all_schemas
+from generator.instance_locator import InstanceLocator
 from generator.vocab_extractor import VocabExtractor
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description='Generate various sources out of the EBRAINS openMINDS schema templates')
@@ -33,14 +34,15 @@ def main():
     print("Extracting the vocab...")
     types_file, properties_file = VocabExtractor(expander.schemas, args["path"], args["reinit"], args["current"]).extract()
     expander.enrich_with_vocab(types_file, properties_file)
-
+    instances = InstanceLocator(args["path"]).find_instances()
     print("Clear target directory")
     if os.path.exists(TARGET_PATH):
         shutil.rmtree(TARGET_PATH)
+
     print(f"Generating JSON schemas for...")
     JsonSchemaGenerator(expander.schemas).generate(ignore=args["ignore"])
     print("Generating HTML documentation...")
-    HTMLGenerator(expander.schemas, current=args["current"], all_tags=[x for x in args["allTags"].split(",") if x], all_version_branches=[x for x in args["allVersionBranches"].split(",") if x]).generate(ignore=args["ignore"])
+    HTMLGenerator(expander.schemas, instances, current=args["current"], all_tags=[x for x in args["allTags"].split(",") if x], all_version_branches=[x for x in args["allVersionBranches"].split(",") if x]).generate(ignore=args["ignore"])
     print("Generating UML documentation...")
     PlantUMLGenerator(expander.schemas).generate(ignore=args["ignore"])
     # print("Generating Python classes...")

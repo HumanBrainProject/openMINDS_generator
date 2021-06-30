@@ -6,7 +6,7 @@ from pathlib import Path
 import jsonschema
 from jsonschema import Draft7Validator, ValidationError
 
-from generator.commons import find_resource_directories
+from generator.commons import find_resource_directories, SCHEMA_FILE_ENDING
 
 
 def _parse_example_filename(file_name):
@@ -39,7 +39,7 @@ def _do_validate(schema_path, example_path, expect_failure):
 def test_examples():
     root_path = os.path.realpath(".")
     schemas_path = os.path.join(root_path, "schemas")
-    for schema_group in find_resource_directories(schemas_path):
+    for schema_group in find_resource_directories(schemas_path, file_ending=SCHEMA_FILE_ENDING):
         schema_group_dir = os.path.join(schemas_path, schema_group)
         tests_group_dir = os.path.realpath(os.path.join(schema_group_dir, "..", "tests"))
         for example in glob.glob(os.path.join(tests_group_dir, '**/*.jsonld'), recursive=True):

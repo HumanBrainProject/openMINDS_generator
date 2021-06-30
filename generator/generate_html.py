@@ -7,12 +7,13 @@ from generator.commons import JinjaGenerator, TEMPLATE_PROPERTY_TYPE, \
 
 class HTMLGenerator(JinjaGenerator):
 
-    def __init__(self, schema_information:List[SchemaStructure], current, all_version_branches, all_tags):
+    def __init__(self, schema_information:List[SchemaStructure], instances, current, all_version_branches, all_tags):
         super().__init__("html", ["html", "xml"], "documentation_template.html")
         self.schema_information = schema_information
         self.schema_information_by_type = {}
         self.schema_collection_by_group = {}
         self.current = current
+        self.instances = instances
         self.all_version_branches = all_version_branches
         self.all_tags = all_tags
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "style.css"), "r", encoding="utf-8") as style_file:
@@ -34,6 +35,8 @@ class HTMLGenerator(JinjaGenerator):
         schema["schemaGroup"] = schema_information.schema_group.split("/")[0]
         schema["schemaVersion"] = schema_information.version
         schema["style"] = self.style
+        if schema[TEMPLATE_PROPERTY_TYPE] in self.instances:
+            schema["instances"] = sorted(self.instances[schema[TEMPLATE_PROPERTY_TYPE]], key=lambda k: k["label"])
         sorted_keys = sorted(schema["properties"].keys())
 
         for property in sorted_keys:

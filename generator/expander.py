@@ -6,13 +6,13 @@ from json.decoder import JSONDecodeError
 from typing import List
 
 from generator.commons import TEMPLATE_PROPERTY_EXTENDS, TEMPLATE_PROPERTY_TYPE, find_resource_directories, EXPANDED_DIR, SCHEMA_FILE_ENDING, SchemaStructure, \
-    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES, OPENMINDS_VOCAB
+    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES, OPENMINDS_VOCAB, INSTANCE_FILE_ENDING
 
 
 class Expander(object):
 
-    def __init__(self, path_to_schemas, ignore=None):
-        self.schema_root_path = os.path.realpath(path_to_schemas)
+    def __init__(self, path, ignore=None):
+        self.root_path = os.path.realpath(path)
         self.get_absolute_expanded_dir = Expander.get_absolute_expanded_dir()
         self.schemas = self._find_schemas(ignore=ignore)
         self._schemas_by_category = Expander._schemas_by_category(self.schemas)
@@ -62,7 +62,7 @@ class Expander(object):
             try:
                 print(f"handling schema for {schema.type}")
                 absolute_schema_group_target_dir = os.path.realpath(os.path.join(absolute_target_dir, schema.schema_group, schema.version))
-                absolute_schema_group_src_dir = self.schema_root_path if schema.schema_group == '' else os.path.join(self.schema_root_path, schema.schema_group, "schemas")
+                absolute_schema_group_src_dir = self.root_path if schema.schema_group == '' else os.path.join(self.root_path, schema.schema_group, "schemas")
                 print(f"process {schema.file}")
                 with open(os.path.join(absolute_schema_group_src_dir, schema.file), "r") as schema_file:
                     schema_payload = json.load(schema_file)
@@ -88,18 +88,18 @@ class Expander(object):
 
     def _find_schemas(self, ignore=None) -> List[SchemaStructure]:
         schema_information = []
-        for schema_group in find_resource_directories(self.schema_root_path, ignore=ignore):
+        for schema_group in find_resource_directories(self.root_path, file_ending=SCHEMA_FILE_ENDING, ignore=ignore):
             schema_group = schema_group.split("/")[0]
-            version_path = os.path.join(self.schema_root_path, schema_group, "version.txt")
+            version_path = os.path.join(self.root_path, schema_group, "version.txt")
             if os.path.isfile(version_path):
                 with open(version_path, "r") as version_file:
                     version = version_file.read().strip()
             else:
                 version = "v0"
-            absolute_schema_group_src_dir = os.path.join(self.schema_root_path, schema_group, "schemas")
+            absolute_schema_group_src_dir = os.path.join(self.root_path, schema_group, "schemas")
             if os.path.isdir(absolute_schema_group_src_dir):
                 print(f"handling schemas of {schema_group}")
-                for schema_path in glob.glob(os.path.join(self.schema_root_path, schema_group, "schemas", f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):
+                for schema_path in glob.glob(os.path.join(self.root_path, schema_group, "schemas", f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):
                     relative_schema_path = schema_path[len(absolute_schema_group_src_dir) + 1:]
                     try:
                         with open(schema_path, "r") as schema_file:
@@ -122,11 +122,11 @@ class Expander(object):
                 extends_split = schema[TEMPLATE_PROPERTY_EXTENDS].split("/")
                 extension_schema_group = extends_split[1]
                 # For cross-submodule references, we allow the schemas to declare "absolute" paths which need to be relativated against the processing directory in this step.
-                extension_path = os.path.realpath(os.path.join(self.schema_root_path, extension_schema_group, "schemas", "/".join(extends_split[2:])))
+                extension_path = os.path.realpath(os.path.join(self.root_path, extension_schema_group, "schemas", "/".join(extends_split[2:])))
             else:
                 extension_schema_group = schema_group
-                extension_path = os.path.realpath(os.path.join(self.schema_root_path, schema_group, "schemas", schema[TEMPLATE_PROPERTY_EXTENDS]))
-            if extension_path.startswith(self.schema_root_path) and os.path.isfile(extension_path):
+                extension_path = os.path.realpath(os.path.join(self.root_path, schema_group, "schemas", schema[TEMPLATE_PROPERTY_EXTENDS]))
+            if extension_path.startswith(self.root_path) and os.path.isfile(extension_path):
                 # Only load the extension if it is part of the same schema group (and if it exists)
                 # (prevent access of resources outside of the directory structure)
                 with open(extension_path, "r") as extension_file:
