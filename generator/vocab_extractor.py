@@ -11,13 +11,18 @@ def _camel_case_to_human_readable(value:str):
 
 class VocabExtractor(object):
 
-    def __init__(self, schema_information:List[SchemaStructure], root_path, reinit):
+    def __init__(self, schema_information:List[SchemaStructure], root_path, reinit, current_version):
         self.schema_information = schema_information
         self.root_path = os.path.realpath(root_path)
         self.vocab_path = os.path.join(self.root_path, "vocab")
         self.properties_file = os.path.join(self.vocab_path, "properties.json")
         self.types_file = os.path.join(self.vocab_path, "types.json")
+        self.properties_version_file = os.path.join(self.root_path, f"properties-{current_version}.json")
+        self.types_version_file = os.path.join(self.root_path, f"types-{current_version}.json")
+
         self.reinit = reinit
+        self.version_specific_properties = {}
+        self.version_specific_types = {}
 
     def _load_properties(self):
         if os.path.exists(self.properties_file):
@@ -49,6 +54,7 @@ class VocabExtractor(object):
             self.properties[qualified_p]["schemas"] = []
         self.properties[qualified_p]["schemas"].append(schema)
         self.properties[qualified_p]["schemas"] = sorted(set(self.properties[qualified_p]["schemas"]))
+        self.version_specific_properties[qualified_p] = self.properties[qualified_p]
 
     def _handle_type(self, type, schema):
         if type not in self.types:
@@ -57,6 +63,12 @@ class VocabExtractor(object):
             self.types[type]["schemas"] = []
         self.types[type]["schemas"].append(schema)
         self.types[type]["schemas"] = sorted(set(self.types[type]["schemas"]))
+        self.version_specific_types[type] = self.types[type]
+
+    def _clear_schema_information(self, map):
+        for k in map:
+            if "schemas" in map[k]:
+                del map[k]["schemas"]
 
     def extract(self):
         self._load_types()
@@ -73,4 +85,10 @@ class VocabExtractor(object):
             types_f.write(json.dumps(self.types, sort_keys=True, indent=4))
         with open(self.properties_file, "w") as properties_f:
             properties_f.write(json.dumps(self.properties, sort_keys=True, indent=4))
+        self._clear_schema_information(self.version_specific_types)
+        with open(self.types_version_file, "w") as types_version_f:
+            types_version_f.write(json.dumps(self.version_specific_types, sort_keys=True, indent=4))
+        self._clear_schema_information(self.version_specific_properties)
+        with open(self.properties_version_file, "w") as properties_version_f:
+            properties_version_f.write(json.dumps(self.version_specific_properties, sort_keys=True, indent=4))
         return self.types_file, self.properties_file

@@ -30,7 +30,7 @@ def main():
     expander = Expander(args["path"], ignore=args["ignore"])
     expander.expand()
     print("Extracting the vocab...")
-    types_file, properties_file = VocabExtractor(expander.schemas, args["path"], args["reinit"]).extract()
+    types_file, properties_file = VocabExtractor(expander.schemas, args["path"], args["reinit"], args["currentVersion"]).extract()
     expander.enrich_with_vocab(types_file, properties_file)
 
     print("Clear target directory")
