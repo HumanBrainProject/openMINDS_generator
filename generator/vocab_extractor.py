@@ -81,14 +81,14 @@ class VocabExtractor(object):
             if "properties" in schema:
                 for p in schema["properties"]:
                     self._handle_property(p, schema_info.get_schema_name())
-        with open(self.types_file, "w") as types_f:
+        with open(self.types_file, "w+") as types_f:
             types_f.write(json.dumps(self.types, sort_keys=True, indent=4))
-        with open(self.properties_file, "w") as properties_f:
+        with open(self.properties_file, "w+") as properties_f:
             properties_f.write(json.dumps(self.properties, sort_keys=True, indent=4))
         self._clear_schema_information(self.version_specific_types)
-        with open(self.types_version_file, "w") as types_version_f:
+        with open(self.types_version_file, "w+") as types_version_f:
             types_version_f.write(json.dumps(self.version_specific_types, sort_keys=True, indent=4))
         self._clear_schema_information(self.version_specific_properties)
-        with open(self.properties_version_file, "w") as properties_version_f:
+        with open(self.properties_version_file, "w+") as properties_version_f:
             properties_version_f.write(json.dumps(self.version_specific_properties, sort_keys=True, indent=4))
         return self.types_file, self.properties_file
