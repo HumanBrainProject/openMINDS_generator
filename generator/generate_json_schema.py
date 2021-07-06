@@ -4,14 +4,15 @@ import os
 from typing import List
 
 from generator.commons import TEMPLATE_PROPERTY_TYPE, type_to_schema_url, \
-    TEMPLATE_PROPERTY_LINKED_TYPES, Generator, TEMPLATE_PROPERTY_FORMATS, SchemaStructure, TEMPLATE_PROPERTY_EMBEDDED_TYPES, OPENMINDS_VOCAB
+    TEMPLATE_PROPERTY_LINKED_TYPES, Generator, TEMPLATE_PROPERTY_FORMATS, SchemaStructure, TEMPLATE_PROPERTY_EMBEDDED_TYPES
 from generator.expander import Expander
 
 
 class JsonSchemaGenerator(Generator):
 
-    def __init__(self, schema_information:List[SchemaStructure]):
+    def __init__(self, schema_information:List[SchemaStructure], vocab):
         super().__init__("schema.json")
+        self.vocab = vocab
         self.schema_information = schema_information
         self.schema_information_by_type = {}
         for schema in self.schema_information:
@@ -133,8 +134,8 @@ class JsonSchemaGenerator(Generator):
             self._handle_property(properties[property_key])
 
         self._handle_embedded_links(schema)
-        schema["properties"] = {f"{OPENMINDS_VOCAB}{k}" if not k.startswith("@") else k:v for k, v in schema["properties"].items()}
-        schema["required"] = [f"{OPENMINDS_VOCAB}{k}" if not k.startswith("@") else k for k in schema["required"]]
+        schema["properties"] = {f"{self.vocab}{k}" if not k.startswith("@") else k:v for k, v in schema["properties"].items()}
+        schema["required"] = [f"{self.vocab}{k}" if not k.startswith("@") else k for k in schema["required"]]
         return json.dumps(schema, indent=4, sort_keys=True)
 
 

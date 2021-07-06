@@ -3,7 +3,7 @@ import os
 import re
 from typing import List
 
-from generator.commons import SchemaStructure, TEMPLATE_PROPERTY_TYPE, OPENMINDS_VOCAB
+from generator.commons import SchemaStructure, TEMPLATE_PROPERTY_TYPE
 
 
 def _camel_case_to_human_readable(value:str):
@@ -11,7 +11,7 @@ def _camel_case_to_human_readable(value:str):
 
 class VocabExtractor(object):
 
-    def __init__(self, schema_information:List[SchemaStructure], root_path, reinit, current_version):
+    def __init__(self, schema_information:List[SchemaStructure], root_path, reinit, current_version, vocab):
         self.schema_information = schema_information
         self.root_path = os.path.realpath(root_path)
         self.vocab_path = os.path.join(self.root_path, "vocab")
@@ -19,7 +19,7 @@ class VocabExtractor(object):
         self.types_file = os.path.join(self.vocab_path, "types.json")
         self.properties_version_file = os.path.join(self.root_path, f"properties-{current_version}.json")
         self.types_version_file = os.path.join(self.root_path, f"types-{current_version}.json")
-
+        self.vocab = vocab
         self.reinit = reinit
         self.version_specific_properties = {}
         self.version_specific_types = {}
@@ -46,7 +46,7 @@ class VocabExtractor(object):
             self.types = {}
 
     def _handle_property(self, p, schema):
-        qualified_p = f"{OPENMINDS_VOCAB}{p}"
+        qualified_p = f"{self.vocab}{p}"
         if qualified_p not in self.properties:
             self.properties[qualified_p] = {"label": _camel_case_to_human_readable(p), "description": None, "schemas": [], "linkedTypes": [], "sameAs": []}
         self.properties[qualified_p]["name"] = p
