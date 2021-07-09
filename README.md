@@ -1,3 +1,7 @@
+<a href="https://github.com/HumanBrainProject/openMINDS/blob/main/img/openMINDS_generator_logo.png">
+    <img src="https://github.com/HumanBrainProject/openMINDS/blob/main/img/openMINDS_generator_logo.png" alt="openMINDS logo" title="openMINDS" align="right" height="70" />
+</a>
+
 # openMINDS_generator <a name="welcome"/>
 
 The **openMINDS_generator** is part of the **open** **M**etadata **I**nitiative for **N**euroscience **D**ata **S**tructures, short **openMINDS**. It contains the **integration pipeline** which builds the [central openMINDS GitHub repository](https://github.com/HumanBrainProject/openMINDS), as well as a small **Python API** which enables the dynamic usage of the openMINDS schemas in your Python application. 
