@@ -19,13 +19,18 @@ right: 0;
 #navig{
     flex: 20%;
     max-width: 50em;
+margin: 1em;
+max-height: 100vh;
+overflow: auto;
 }
 
 #frame{
 flex-grow:1;
 width: 100%;
 height: 100%;
+max-height: 90vh;
 margin-top: 3em;
+margin-bottom: 3em;
 }
 
 #frame iframe{
@@ -36,6 +41,23 @@ border: 0;
 
 #navig h2{
 cursor: pointer;
+}
+
+#version{
+font-size: 1.2em;
+margin: 1em;
+font-weight: bold;
+}
+
+#version select{
+font-size: 1.1em;
+}
+
+#header{
+border-bottom: 1px solid #4a5568;
+text-align: center;
+padding-bottom: 0.5em;
+padding-top: 0.5em;
 }
 
     </style>
@@ -56,7 +78,24 @@ cursor: pointer;
 </script>
 <div id="content">
     <div id="navig">
-        <img src="https://github.com/HumanBrainProject/openMINDS/raw/v1/img/openMINDS_logo.png" style="height: 5em;"/>
+        <div id="header">
+        <img src="https://github.com/HumanBrainProject/openMINDS/raw/main/img/openMINDS_logo.png" style="height: 5em;"/>
+        <div id="version">Version: <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ current }}', this.value)">
+            <option disabled>--- stable --</option>
+             {% for tag in allTags %}
+            <option {% if tag == current %}selected{% endif %} value="{{ tag }}">{{ tag }}</option>
+            {% endfor %}
+            <option disabled>--- development --</option>
+            {% for version in allVersions %}
+            <option {% if version == current %}selected{% endif %} value="{{ version }}">{{ version }}-dev</option>
+            {% endfor %}
+        </select>
+
+        </div>
+                    <div>
+            <a href="../openMINDS-{{ current }}.zip">Download specification</a>
+        </div>
+            </div>
         {% for module in modules %}<div><h2 onclick="toggleCategory('types{{module['name']}}');">{{ module["name"] }}</h2>
             <div id="types{{module['name']}}" style="display:none;">
                 {% for g in module['types']['typesByCategory'].keys() %}
@@ -68,6 +107,8 @@ cursor: pointer;
                 </div>
         </div>
         {% endfor %}
+
+
     </div>
     <div id="frame">
         <iframe name="innerFrame" src="default.html"></iframe>

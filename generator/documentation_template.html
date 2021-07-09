@@ -4,29 +4,60 @@
     <style>{{ style|safe }}</style>
 </head>
 <body>
-    <h1>{{ simpleTypeName }} ({{ schemaGroup }} - {{ schemaVersion }})</h1>
-    <h4>{{ _type }} - view as <a href="{{ schemaId }}">JSON Schema</a></h4>
+    <h1>{{ simpleTypeName }}</h1>
+    <h2>{{ _type }}</h2>
+    <h4>part of <b>{{ schemaGroup }}</b> in version <b>{{schemaVersion}}</b> - view as <a href="{{ schemaId }}">JSON Schema</a></h4>
     <div>Required properties are highlighted in <span style="font-weight:bold">bold</span></div>
 
     <table class="properties">
         <tr class="header"><td class="property" colspan="2">property</td><td colspan="2">value</td></tr>
         <tr class="header"><td class="property">name*</td><td>description</td><td>type</td><td>instruction</td></tr>
-        {% for property, propertyValue in properties.items() %}
+        {% for property, propertyValue in properties %}
         <tr>
             <td class="property nowrap"><span {% if propertyValue['is_required'] %}style="font-weight:bold"{% endif %}>{{ property }}</span></td>
             <td>{{propertyValue["description"]}}</td>
             <td>
-                {% if propertyValue['embedded'] %}embedded {% endif %}
-                {% if propertyValue['linked'] %}link to {% endif %}
-                {% for type in propertyValue["typeInformation"] %}{% if "url" in type %}
-                <a href="{{ type['url'] }}">{{type['label']}}</a>
-                {% else %}{{type['label']}}{% endif %}{% if not loop.last %} or {% endif %}{% endfor %}</td>
+                {% if propertyValue['embedded'] %} embedded object{% endif %}
+                {% if propertyValue['linked'] %} linked object{% endif %}
+                {% if propertyValue['is_array'] %} array {{propertyValue['cardinality']}} of type:<br/>{% endif %}
+                {% for expectedValue in propertyValue["typeInformation"] %}{% if "url" in expectedValue %}
+                <a href="{{expectedValue['url']}}">{{expectedValue['label']}}</a>
+                {% else %}{{expectedValue['label']}}{% endif %}{% if not loop.last %} OR <br/> {% endif %}{% endfor %}</td>
             <td>{{propertyValue["_instruction"]}}</td>
         </tr>
         {% endfor %}
     </table>
 
     <div style="margin-top: 2em;">*This is the simplified property name - within a metadata instance of this schema (JSON-LD) the properties are extended to map to the openMINDS vocabulary namespace (<span style="font-weight: bold">"https://openminds.ebrains.eu/vocab/PROPERTY_NAME"</span>).
+    {% if instances %}
+    <div style="margin-top: 3em;">
+         <table class="properties">
+        <tr class="header"><td class="property" colspan="4">instances</td></tr>
+        <tr class="header"><td class="property">name</td><td>ID</td>
+            {% if hasOntologicalIdentifiers %}
+            <td>Preferred ontology identifier</td>
+            {% endif %}
+            <td></td></tr>
+        {% for instance in instances %}
+        <tr>
+            <td class="property nowrap">{{ instance['label'] }}</td>
+            <td>{{ instance['id']}}</td>
+            {% if hasOntologicalIdentifiers %}
+            <td>{% if instance['ontologyIdentifier'] %}{{ instance['ontologyIdentifier']}}{% endif %}</td>
+            {% endif %}
+            <td class="nowrap" style="font-size:0.8em; font-weight: bold;"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a>
+                {% if instance['interlex'] %}, <a href="{{ instance['interlex']}}" target="_blank">Interlex</a>{% endif %}
+                {% if instance['knowledgeSpace'] %}, <a href="{{ instance['knowledgeSpace']}}" target="_blank">Knowledge Space</a>{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% endif %}
+
+
+
+
         <!-- To learn more please go to:
 <a href="https://wiki.ebrains.eu/bin/view/Collabs/openminds/openMINDS%20core/Application%20details/" target="_blank">EBRAINS Collaboratory: openMINDS - Documentation/Application details</a>--></div>
 </body>

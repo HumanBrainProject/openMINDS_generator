@@ -1,9 +1,28 @@
 <html>
 <head>
     <title>{{ group }}</title>
-    <style>{{ style|safe }}</style>
+    <style>{{ style|safe }}
+    body {
+        margin: 2em;
+    }
+
+    select{
+        font-size: 0.8em;
+        margin-left: 0.5em;
+    }
+</style>
 </head>
 <body>
+<div id="version"><h2>openMINDS <select onchange="if (this.value) window.location.href=window.location.href.replaceAll('{{ current }}', this.value)">
+            <option disabled>--- stable --</option>
+             {% for tag in allTags %}
+            <option {% if tag == current %}selected{% endif %} value="{{ tag }}">{{ tag }}</option>
+            {% endfor %}
+            <option disabled>--- development --</option>
+            {% for version in allVersions %}
+            <option {% if version == current %}selected{% endif %} value="{{ version }}">{{ version }}-dev</option>
+            {% endfor %}
+</select>: {{group}}</h2></div>
 <div>
       <table>
         <tr><td>

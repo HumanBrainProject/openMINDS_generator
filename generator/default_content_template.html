@@ -1,11 +1,20 @@
 <html>
 <head>
     <title>openMINDS</title>
-    <style>{{ style|safe }}</style>
+    <style>{{ style|safe }}
+#content div{
+ margin: 2em 0;
+ font-size: 1.2em;
+}
+
+</style>
 </head>
 <body>
-<h1>Welcome to openMINDS!</h1>
+<h1>Welcome to openMINDS {{ current }}!</h1>
+<div id="content">
 <div>Please find the different submodules available on the left navigation bar and then pick the schema you're interested in.</div>
+<div>You can download the full specification <a href="../openMINDS-{{ current }}.zip">here</a></div>
+</div>
 </body>
 
 </html>

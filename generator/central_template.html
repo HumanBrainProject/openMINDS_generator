@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>openMINDS</title>
+    <style>{{ style|safe }}
+    body {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    </style>
+</head>
+<body>
+<h1>Welcome to <br/><img src="https://github.com/HumanBrainProject/openMINDS/raw/main/img/openMINDS_logo.png" style="height: 4em; padding: 1em 0;"/></h1>
+<div id="content">
+    <p>openMINDS currently exists in the following versions: {% for tag in allTags %}
+    <div><a href="./{{ tag }}">{{ tag }}</a></div>
+    {% endfor %}
+    </p><p>
+    Here are the development states of the corresponding versions:<br/>
+    {% for version in allVersions %}
+    <div><a href="./{{ version }}">{{ version }}-dev</a></div>
+    {% endfor %}
+    </p>
+</div>
+</body>
+
+</html>
