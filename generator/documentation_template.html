@@ -32,7 +32,7 @@
     {% if instances %}
     <div style="margin-top: 3em;">
          <table class="properties">
-        <tr class="header"><td class="property" colspan="4">instances</td></tr>
+        <tr class="header"><td class="property" colspan="5">instances</td></tr>
         <tr class="header"><td class="property">name</td><td class="property">definition</td><td>ID</td>
             {% if hasOntologicalIdentifiers %}
             <td>Preferred ontology identifier</td>
@@ -41,9 +41,9 @@
         {% for instance in instances %}
         <tr>
             <td class="property nowrap">{{ instance['label'] }}</td>
+            <td>{% if instance['definition'] %}{{ instance['definition']}}{% endif %}</td>
             <td>{{ instance['id']}}</td>
             {% if hasOntologicalIdentifiers %}
-            <td>{% if instance['definition'] %}{{ instance['definition']}}{% endif %}</td>
             <td>{% if instance['ontologyIdentifier'] %}{{ instance['ontologyIdentifier']}}{% endif %}</td>
             {% endif %}
             <td class="nowrap" style="font-size:0.8em; font-weight: bold;"><a href="{{ instance['githubUrl']}}" target="_blank">JSON-LD</a>
