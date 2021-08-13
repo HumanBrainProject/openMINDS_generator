@@ -69,8 +69,10 @@ class Expander(object):
                     extension = json.load(extension_file)
                 # We need to extend the extension itself first to ensure that we can handle multi-level extensions...
                 extended_schema = self._process_schema_first_pass(source_schema, extension, extension_schema_group)
-                Expander._apply_extension(source_schema, schema, extended_schema)
+                Expander._apply_extension(schema, extended_schema)
             del schema[TEMPLATE_PROPERTY_EXTENDS]
+        if TEMPLATE_PROPERTY_CATEGORIES in schema and schema[TEMPLATE_PROPERTY_CATEGORIES]:
+            source_schema.set_categories(schema[TEMPLATE_PROPERTY_CATEGORIES])
         return schema
 
     def expand(self):
@@ -157,7 +159,7 @@ class Expander(object):
             target_file.write(json.dumps(schema_payload, indent=4))
 
     @staticmethod
-    def _apply_extension(source_schema, source, extension):
+    def _apply_extension(source, extension):
             #Required has to be a list...
             if "required" in extension:
                 if "required" not in source:
@@ -172,8 +174,6 @@ class Expander(object):
                     source[TEMPLATE_PROPERTY_CATEGORIES] = extension[TEMPLATE_PROPERTY_CATEGORIES]
                 elif type(source[TEMPLATE_PROPERTY_CATEGORIES]) is list and type(extension[TEMPLATE_PROPERTY_CATEGORIES]) is list:
                     source[TEMPLATE_PROPERTY_CATEGORIES] = list(set(source[TEMPLATE_PROPERTY_CATEGORIES] + extension[TEMPLATE_PROPERTY_CATEGORIES]))
-            if TEMPLATE_PROPERTY_CATEGORIES in source and source[TEMPLATE_PROPERTY_CATEGORIES]:
-                source_schema.set_categories(source[TEMPLATE_PROPERTY_CATEGORIES])
 
             for k in extension["properties"]:
                 property_from_extension = extension["properties"][k]
