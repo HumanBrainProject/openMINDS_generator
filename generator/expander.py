@@ -15,7 +15,7 @@ class Expander(object):
         self.vocab = vocab
         self.get_absolute_expanded_dir = Expander.get_absolute_expanded_dir()
         self.schemas = self._find_schemas(ignore=ignore)
-        self._schemas_by_category = Expander._schemas_by_category(self.schemas)
+        self._schemas_by_category = None
 
     @staticmethod
     def get_absolute_expanded_dir():
@@ -52,13 +52,34 @@ class Expander(object):
             with open(schema_info.absolute_path, "w") as schema_file:
                 schema_file.write(json.dumps(schema, indent=4))
 
+    def _process_schema_first_pass(self, source_schema, schema, schema_group):
+        if TEMPLATE_PROPERTY_EXTENDS in schema:
+            if schema[TEMPLATE_PROPERTY_EXTENDS].startswith("/"):
+                extends_split = schema[TEMPLATE_PROPERTY_EXTENDS].split("/")
+                extension_schema_group = extends_split[1]
+                # For cross-submodule references, we allow the schemas to declare "absolute" paths which need to be relativated against the processing directory in this step.
+                extension_path = os.path.realpath(os.path.join(self.root_path, schema[TEMPLATE_PROPERTY_EXTENDS]))
+            else:
+                extension_schema_group = schema_group
+                extension_path = os.path.realpath(os.path.join(self.root_path, schema_group, "schemas", schema[TEMPLATE_PROPERTY_EXTENDS]))
+            if extension_path.startswith(self.root_path) and os.path.isfile(extension_path):
+                # Only load the extension if it is part of the same schema group (and if it exists)
+                # (prevent access of resources outside of the directory structure)
+                with open(extension_path, "r") as extension_file:
+                    extension = json.load(extension_file)
+                # We need to extend the extension itself first to ensure that we can handle multi-level extensions...
+                extended_schema = self._process_schema_first_pass(source_schema, extension, extension_schema_group)
+                Expander._apply_extension(source_schema, schema, extended_schema)
+            del schema[TEMPLATE_PROPERTY_EXTENDS]
+        return schema
+
     def expand(self):
         absolute_target_dir = Expander.get_absolute_expanded_dir()
         if os.path.exists(absolute_target_dir):
             print("clearing previously generated expanded sources")
             shutil.rmtree(absolute_target_dir)
-
         for schema in self.schemas:
+            print(f"handling schema for {schema.type} - 1st pass")
             try:
                 print(f"handling schema for {schema.type}")
                 absolute_schema_group_target_dir = os.path.realpath(os.path.join(absolute_target_dir, schema.schema_group, schema.version))
@@ -67,13 +88,17 @@ class Expander(object):
                 with open(os.path.join(absolute_schema_group_src_dir, schema.file), "r") as schema_file:
                     schema_payload = json.load(schema_file)
                 schema_target_path = os.path.join(absolute_schema_group_target_dir, schema.file)
-                self._process_schema(schema_payload, schema.schema_group)
+                self._process_schema_first_pass(schema, schema_payload, schema.schema_group)
                 schema.set_absolute_path(schema_target_path)
                 os.makedirs(os.path.dirname(schema_target_path), exist_ok=True)
                 with open(schema_target_path, "w") as target_file:
                     target_file.write(json.dumps(schema_payload, indent=4))
             except JSONDecodeError:
                 print(f"Skipping schema {schema.file} because it is not a valid JSON document")
+        self._schemas_by_category = Expander._schemas_by_category(self.schemas)
+        for schema in self.schemas:
+            print(f"handling schema for {schema.type} - 2nd pass")
+            self._process_schema_second_pass(schema)
 
     @staticmethod
     def _schemas_by_category(schemas: List[SchemaStructure]) -> dict:
@@ -106,8 +131,7 @@ class Expander(object):
                             schema = json.load(schema_file)
                         if TEMPLATE_PROPERTY_TYPE in schema:
                             schema_information.append(
-                                SchemaStructure(schema[TEMPLATE_PROPERTY_TYPE], schema[TEMPLATE_PROPERTY_CATEGORIES] if TEMPLATE_PROPERTY_CATEGORIES in schema else None, schema_group,
-                                                version, relative_schema_path))
+                                SchemaStructure(schema[TEMPLATE_PROPERTY_TYPE], schema_group, version, relative_schema_path))
                         else:
                             print(f"Skipping schema {relative_schema_path} because it doesn't contain a valid type")
                     except JSONDecodeError:
@@ -116,39 +140,24 @@ class Expander(object):
                 print(f"Skipping schemas of {schema_group} since there is no schemas directory")
         return schema_information
 
-    def _process_schema(self, schema, schema_group):
-        if TEMPLATE_PROPERTY_EXTENDS in schema:
-            if schema[TEMPLATE_PROPERTY_EXTENDS].startswith("/"):
-                extends_split = schema[TEMPLATE_PROPERTY_EXTENDS].split("/")
-                extension_schema_group = extends_split[1]
-                # For cross-submodule references, we allow the schemas to declare "absolute" paths which need to be relativated against the processing directory in this step.
-                extension_path = os.path.realpath(os.path.join(self.root_path, extension_schema_group, "schemas", "/".join(extends_split[2:])))
-            else:
-                extension_schema_group = schema_group
-                extension_path = os.path.realpath(os.path.join(self.root_path, schema_group, "schemas", schema[TEMPLATE_PROPERTY_EXTENDS]))
-            if extension_path.startswith(self.root_path) and os.path.isfile(extension_path):
-                # Only load the extension if it is part of the same schema group (and if it exists)
-                # (prevent access of resources outside of the directory structure)
-                with open(extension_path, "r") as extension_file:
-                    extension = json.load(extension_file)
-                # We need to extend the extension itself first to ensure that we can handle multi-level extensions...
-                extended_schema = self._process_schema(extension, extension_schema_group)
-                Expander._apply_extension(schema, extended_schema)
-            del schema[TEMPLATE_PROPERTY_EXTENDS]
-        if "properties" in schema:
-            for p in schema["properties"]:
-                if TEMPLATE_PROPERTY_LINKED_CATEGORIES in schema["properties"][p]:
-                    linked_categories = schema["properties"][p][TEMPLATE_PROPERTY_LINKED_CATEGORIES]
+    def _process_schema_second_pass(self, schema):
+        with open(schema.absolute_path, "r") as schema_file:
+            schema_payload = json.load(schema_file)
+        if "properties" in schema_payload:
+            for p in schema_payload["properties"]:
+                if TEMPLATE_PROPERTY_LINKED_CATEGORIES in schema_payload["properties"][p]:
+                    linked_categories = schema_payload["properties"][p][TEMPLATE_PROPERTY_LINKED_CATEGORIES]
                     linked_types = []
                     for linked_category in linked_categories:
                         if linked_category in self._schemas_by_category:
                             linked_types.extend(self._schemas_by_category[linked_category])
-                    schema["properties"][p][TEMPLATE_PROPERTY_LINKED_TYPES] = linked_types
-                    del schema["properties"][p][TEMPLATE_PROPERTY_LINKED_CATEGORIES]
-        return schema
+                    schema_payload["properties"][p][TEMPLATE_PROPERTY_LINKED_TYPES] = linked_types
+                    del schema_payload["properties"][p][TEMPLATE_PROPERTY_LINKED_CATEGORIES]
+        with open(schema.absolute_path, "w") as target_file:
+            target_file.write(json.dumps(schema_payload, indent=4))
 
     @staticmethod
-    def _apply_extension(source, extension):
+    def _apply_extension(source_schema, source, extension):
             #Required has to be a list...
             if "required" in extension:
                 if "required" not in source:
@@ -157,6 +166,15 @@ class Expander(object):
                     source["required"] = list(set(source["required"] + extension["required"]))
             if "properties" not in source:
                 source["properties"] = {}
+
+            if TEMPLATE_PROPERTY_CATEGORIES in extension:
+                if TEMPLATE_PROPERTY_CATEGORIES not in source:
+                    source[TEMPLATE_PROPERTY_CATEGORIES] = extension[TEMPLATE_PROPERTY_CATEGORIES]
+                elif type(source[TEMPLATE_PROPERTY_CATEGORIES]) is list and type(extension[TEMPLATE_PROPERTY_CATEGORIES]) is list:
+                    source[TEMPLATE_PROPERTY_CATEGORIES] = list(set(source[TEMPLATE_PROPERTY_CATEGORIES] + extension[TEMPLATE_PROPERTY_CATEGORIES]))
+            if TEMPLATE_PROPERTY_CATEGORIES in source and source[TEMPLATE_PROPERTY_CATEGORIES]:
+                source_schema.set_categories(source[TEMPLATE_PROPERTY_CATEGORIES])
+
             for k in extension["properties"]:
                 property_from_extension = extension["properties"][k]
                 if k in source["properties"]:

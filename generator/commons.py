@@ -23,14 +23,19 @@ INSTANCE_FILE_ENDING = ".jsonld"
 ROOT_PATH = os.path.realpath(".")
 TARGET_PATH = os.path.join(ROOT_PATH, "target")
 
+
 class SchemaStructure:
 
-    def __init__(self, type, categories, schema_group, version, file):
+    def __init__(self, type, schema_group, version, file):
         self.type = type
-        self.categories = categories
         self.schema_group = schema_group
         self.file = file
         self.version = version
+        self.categories = None
+        self.absolute_path = None
+
+    def set_categories(self, categories):
+        self.categories = categories
 
     def set_absolute_path(self, absolute_path):
         self.absolute_path = absolute_path
