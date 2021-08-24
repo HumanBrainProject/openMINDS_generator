@@ -1,5 +1,5 @@
-<a href="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-generator-logo.png">
-    <img src="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-generator-logo.png" alt="openMINDS generator logo" title="openMINDS generator" align="right" height="70" />
+<a href="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-generator_logo.png">
+    <img src="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-generator_logo.png" alt="openMINDS generator logo" title="openMINDS generator" align="right" height="70" />
 </a>
 
 # Welcome to openMINDS!
