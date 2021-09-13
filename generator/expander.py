@@ -58,7 +58,8 @@ class Expander(object):
                 extends_split = schema[TEMPLATE_PROPERTY_EXTENDS].split("/")
                 extension_schema_group = extends_split[1]
                 # For cross-submodule references, we allow the schemas to declare "absolute" paths which need to be relativated against the processing directory in this step.
-                extension_path = os.path.realpath(os.path.join(self.root_path, schema[TEMPLATE_PROPERTY_EXTENDS]))
+                extension_path = os.path.realpath(os.path.join(
+                    self.root_path, extension_schema_group, "schemas", *extends_split[2:]))
             else:
                 extension_schema_group = schema_group
                 extension_path = os.path.realpath(os.path.join(self.root_path, schema_group, "schemas", schema[TEMPLATE_PROPERTY_EXTENDS]))
