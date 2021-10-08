@@ -11,7 +11,7 @@ These scripts allow the generation of the output formats HTML, schema.json and
 python from the template language used to define the openMINDS schemas.
 
 In addition to this the python compiler allows the dynamic usage of openMINDS
-in your Python appication.
+in your Python application.
 
 Example:
 
