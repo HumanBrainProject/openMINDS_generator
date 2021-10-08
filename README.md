@@ -12,8 +12,8 @@ The openMINDS_generator repository also hosts a small **openMINDS Python** libra
 
 For more technical details please go to the [central openMINDS repository](https://github.com/HumanBrainProject/openMINDS) or the [openMINDS Collab](https://wiki.ebrains.eu/bin/view/Collabs/openminds/).
 
-<a href="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-python_logo.png">
-    <img src="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-python_logo.png" alt="openMINDS Python logo" title="openMINDS Python" align="right" height="50" />
+<a href="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-python-logo.png">
+    <img src="https://github.com/HumanBrainProject/openMINDS_generator/blob/main/img/light_openMINDS-python-logo.png" alt="openMINDS Python logo" title="openMINDS Python" align="right" height="50" />
 </a>
 
 ## openMINDS Python
