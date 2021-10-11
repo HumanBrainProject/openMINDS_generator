@@ -16,6 +16,10 @@ def _build_output_folder(substructure = None):
     else:
         return PYTHON_OUTPUT_FOLDER + "/" + substructure
 
+    
+def _strip_vocab(property):
+    return property.split('/')[-1]
+
 
 def _fix_property_name(property):
     if property[0] == "@":
@@ -27,7 +31,7 @@ def _fix_property_name(property):
 def _fix_property_names(properties):
     out = []
     for property in properties:
-        out.append(_fix_property_name(property))
+        out.append(_strip_vocab(_fix_property_name(property)))
 
     return out
 
@@ -82,6 +86,7 @@ def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
     for property in schema_dictionary["properties"]:
+        property = _strip_vocab(property)
         get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
@@ -194,7 +199,9 @@ def classify_properties(schema_dict):
 
     return out_dict
 
-def _build_normal_setter(property):
+
+def _build_normal_setter(property_p):
+    property = _strip_vocab(property_p)
     signature = "set_" + property
     function_string = "def " + signature + "(self, " + property + "):\n"
     function_string += "\tself." + property + " = " + property + "\n"
@@ -222,7 +229,8 @@ def _build_setter(properties_dict):
     return setter_functions
 
 
-def _build_normal_getter(property):
+def _build_normal_getter(property_p):
+    property = _strip_vocab(property_p)
     signature = "get_" + property
     function_string = "def " + signature + "(self):\n"
     function_string += "\treturn self." + property + "\n"
