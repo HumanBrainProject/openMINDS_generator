@@ -3,11 +3,11 @@ import openMINDS.compiler
 helper = openMINDS.compiler.Helper()
 mycollection = helper.create_collection()
 lyuba = mycollection.add_core_person(givenName="Lyuba")
-#mycollection.help_core_data_copyright()
-#mycollection.get(lyuba).familyName = "Zehl"
-#email_lyuba = mycollection.add_core_contactInformation(email="openminds@ebrains.eu")
-#mycollection.get(lyuba).contactInformation = email_lyuba
-#mycollection.save("./myFirstOpenMINDSMetadataCollection/")
+mycollection.help_core_data_copyright()
+mycollection.get(lyuba).familyName = "Zehl"
+email_lyuba = mycollection.add_core_contactInformation(email="openminds@ebrains.eu")
+mycollection.get(lyuba).contactInformation = email_lyuba
+mycollection.save("./myFirstOpenMINDSMetadataCollection/")
 
 
 #import openMINDS.compiler

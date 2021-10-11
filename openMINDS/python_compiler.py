@@ -21,7 +21,8 @@ def _strip_vocab(property):
     return property.split('/')[-1]
 
 
-def _fix_property_name(property):
+def _fix_property_name(property_p):
+    property = _strip_vocab(property_p)
     if property[0] == "@":
         return "at_" + property[1:]
     else:
@@ -86,7 +87,6 @@ def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
     for property in schema_dictionary["properties"]:
-        property = _strip_vocab(property)
         get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
