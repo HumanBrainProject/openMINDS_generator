@@ -1,9 +1,10 @@
 import os
+import json
 import openMINDS.MetaSchemaCollection
 import openMINDS.version_manager
 
+from pathlib import Path
 from openMINDS.schema_discovery import Schema_Discovery
-
 
 class Helper:
     '''
@@ -13,18 +14,20 @@ class Helper:
     and SANDS.
     '''
 
-    def __init__(self, version="v1.0.0"):
+    def __init__(self):
         '''
         Generate the objects that allow schema discovery.
         '''
+        with open(os.path.join(Path.home(), ".openMINDS.conf"), "r") as f:
+            config = json.load(f)
+        
+            # Get the version information from local cache
+            #version_information = openMINDS.version_manager.Version_Manager().get_version(config["selected_version"])
 
-        # Get the version information from local cache
-        version_information = openMINDS.version_manager.Version_Manager().get_version(version)
-
-        # Discover schemas available in the folders defined above
-        self.core = Schema_Discovery(version_information["core"], "core")
-        self.SANDS = Schema_Discovery(version_information["sands"], "SANDS")
-        self.controlledTerms = Schema_Discovery(version_information["controlledTerms"], "controlledTerms")
+            # Discover schemas available in the folders defined above
+            self.core = Schema_Discovery(os.path.join(config["openMINDS_directory"] + "/" + config["selected_version"] + "/core"), "core")
+            self.SANDS = Schema_Discovery(os.path.join(config["openMINDS_directory"] + "/" + config["selected_version"] + "/SANDS"), "SANDS")
+            self.controlledTerms = Schema_Discovery(os.path.join(config["openMINDS_directory"] + "/" + config["selected_version"] + "/controlledTerms"), "controlledTerms")
 
 
     def create_collection(self):

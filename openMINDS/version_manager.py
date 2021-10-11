@@ -1,5 +1,5 @@
 import os
-import urllib3
+#import urllib3
 import tempfile
 import pathlib
 import zipfile
@@ -53,7 +53,7 @@ class Version_Manager:
             }
         }
 
-        self.download_and_extract()
+        #self.download_and_extract()
 
     def get_version(self, version_name):
         return_version_info = {}
