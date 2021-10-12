@@ -6,7 +6,7 @@ import click
 from pathlib import Path
 
 REPO_URL = "https://github.com/HumanBrainProject/openMINDS/"
-DEFAULT_DIRECTORY = ".openMINDS"
+DEFAULT_DIRECTORY = ".openMINDS_python"
 CONFIG_FILE = os.path.join(Path.home(), ".openMINDS.conf")
 VERSION_DESCRIPTIONS = "./version_descriptions.json"
 
