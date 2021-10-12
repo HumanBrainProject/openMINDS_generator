@@ -39,6 +39,7 @@ import openMINDS
 # Initialise the local copy of openMINDS
 openMINDS.version_manager.init()
 
+# Select which version of openMINDS to use
 openMINDS.version_manager.version_selection('v2.0.0')
 
 # initiate the helper class for the dynamic usage of a specific openMINDS version
