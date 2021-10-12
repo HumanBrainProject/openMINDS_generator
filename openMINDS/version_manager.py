@@ -131,7 +131,7 @@ def init_repo(target_dir):
         
 
 @click.command()
-def update():
+def update_repo():
     config = _get_config()
     update_openMINDS(config["openMINDS_directory"])
 
@@ -153,7 +153,7 @@ def status():
     
     
 version_manager_cli.add_command(init_repo)
-version_manager_cli.add_command(update)
+version_manager_cli.add_command(update_repo)
 version_manager_cli.add_command(select_version)
 version_manager_cli.add_command(status)
 
