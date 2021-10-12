@@ -32,11 +32,11 @@ class InstanceLocator(object):
                     "id": payload["@id"],
                     "relativePath": relative_path,
                     "githubUrl": f"https://raw.githubusercontent.com/HumanBrainProject/openMINDS_{submodule}/{version}/{relative_path}",
-                    "label": payload["name"] if "name" in payload else payload["fullName"] if "fullName" in payload else None, #TODO make this dynamic
+                    "label": payload["name"] if "name" in payload else payload["shortName"] if "shortName" in payload else payload["lookupLabel"] if "lookupLabel" in payload else None, #TODO make this dynamic
                     "interlex": payload["interlexIdentifier"] if "interlexIdentifier" in payload else None,
                     "knowledgeSpace": payload["knowledgeSpaceLink"] if "knowledgeSpaceLink" in payload else None,
                     "ontologyIdentifier": payload["preferredOntologyIdentifier"] if "preferredOntologyIdentifier" in payload else None,
-                    "definition": payload["definition"] if "definition" in payload else None
+                    "extraInfo": payload["definition"] if "definition" in payload else payload["versionIdentifier"] if "versionIdentifier" in payload else payload["internalIdentifier"] if "internalIdentifier" in payload else None
                 }
                 for t in types:
                     if t not in instances_by_type:
