@@ -32,7 +32,10 @@ def _update_config(config):
         json.dump(config, f)
 
             
-def download_openMINDS(target_directory):
+def update_openMINDS(target_directory=None):
+    if target_directory is None:
+        target_directory = os.path.join(Path.home(), DEFAULT_DIRECTORY)
+    
     if os.path.exists(target_directory):
         print("openMINDS directory exists")
         print("Checking for updates")
@@ -110,7 +113,7 @@ def init(target_dir=None):
     if target_dir is None:
         target_dir = os.path.join(Path.home(), DEFAULT_DIRECTORY)
         
-    download_openMINDS(target_dir)
+    update_openMINDS(target_dir)
 
     config = {
         "openMINDS_directory": target_dir,
@@ -130,7 +133,7 @@ def init_repo(target_dir):
 @click.command()
 def update():
     config = _get_config()
-    download_openMINDS(config["openMINDS_directory"])
+    update_openMINDS(config["openMINDS_directory"])
 
     
 @click.command()
