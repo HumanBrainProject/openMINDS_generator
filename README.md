@@ -38,6 +38,8 @@ import openMINDS
 
 openMINDS.version_manager.init()
 
+openMINDS.version_manager.version_selection('v2.0.0')
+
 # initiate the helper class for the dynamic usage of a specific openMINDS version
 helper = openMINDS.Helper()
 
