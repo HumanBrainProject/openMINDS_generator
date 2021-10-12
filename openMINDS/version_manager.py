@@ -38,7 +38,7 @@ def download_openMINDS(target_directory):
         print("Checking for updates")
         repo = git.Repo(target_directory)
         origin = repo.remotes[0]
-        origin.pull(progress=MyProgressPrinter)
+        origin.pull()
     else:
         print("Target directory will created")
         print("Cloning openMINDS to target directory")
