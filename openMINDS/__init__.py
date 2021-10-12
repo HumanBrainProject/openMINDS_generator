@@ -1,7 +1,7 @@
 import os
 import json
 import openMINDS.MetaSchemaCollection
-import openMINDS.version_manager
+#import openMINDS.version_manager
 
 from pathlib import Path
 from openMINDS.schema_discovery import Schema_Discovery
