@@ -36,6 +36,8 @@ As stated above, the openMINDS Python allows you the dynamic usage of openMINDS 
 ```python
 import openMINDS
 
+openMINDS.version_manager.init()
+
 # initiate the helper class for the dynamic usage of a specific openMINDS version
 helper = openMINDS.Helper()
 
