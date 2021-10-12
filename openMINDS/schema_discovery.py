@@ -11,6 +11,8 @@ class Schema_Discovery:
     '''
 
     def __init__(self, folder, namespace):
+        #print(folder)
+        #print(namespace)
         self.schemas = {}
         schema_files = []
         subfolder = False
@@ -26,31 +28,33 @@ class Schema_Discovery:
                     subfolder = True
 
         for schema_filename in schema_files:
-            #print(schema_filename)
-            stripped_filename = os.path.splitext(
-                                    os.path.splitext(
-                                        os.path.basename(schema_filename)
-                                    )[0]
-                                )[0]
+            if ".json" == os.path.splitext(schema_filename)[1]:
+                #print(schema_filename)
+                #print(os.path.splitext(schema_filename))
+                stripped_filename = os.path.splitext(
+                    os.path.splitext(
+                        os.path.basename(schema_filename)
+                    )[0]
+                )[0]
 
-            if subfolder:
-                setattr(self,
-                        schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper(),
-                        {
-                            "filename": schema_filename,
-                            "name": stripped_filename,
-                            "namespace": namespace,
-                            "substructure": schema_filename.split('/')[-2]
-                        }
-                )
-                self.schemas[schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace,"substructure": schema_filename.split('/')[-2]}
-            else:
-                setattr(self,
+                if subfolder:
+                    setattr(self,
+                            schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper(),
+                            {
+                                "filename": schema_filename,
+                                "name": stripped_filename,
+                                "namespace": namespace,
+                                "substructure": schema_filename.split('/')[-2]
+                            }
+                    )
+                    self.schemas[schema_filename.split('/')[-2].upper() + "__" + stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace,"substructure": schema_filename.split('/')[-2]}
+                else:
+                    setattr(self,
                         stripped_filename.upper(),
-                        {
-                            "filename": schema_filename,
-                            "name": stripped_filename,
-                            "namespace": namespace
-                        }
-                       )
-                self.schemas[stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace}
+                            {
+                                "filename": schema_filename,
+                                "name": stripped_filename,
+                                "namespace": namespace
+                            }
+                        )
+                    self.schemas[stripped_filename.upper()] = {"filename": schema_filename,"name": stripped_filename,"namespace": namespace}

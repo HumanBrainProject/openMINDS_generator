@@ -1,0 +1,10 @@
+{
+    "default_version": "v2.0.0",
+    "versions": {
+	"v2.0.0": "Stable Release 2.0.0",
+	"v1.0.0": "DEPRECATED Release 1.0.0",
+	"v2": "Development version 2",
+	"v3": "Development version 3",
+	"v1": "DEPRECATED Development version 1"
+    }
+}

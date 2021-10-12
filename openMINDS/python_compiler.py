@@ -1,7 +1,9 @@
+import re
 import json
 import jsonschema
 import os.path
 import pathlib
+import requests
 
 from string import Template
 
@@ -14,8 +16,13 @@ def _build_output_folder(substructure = None):
     else:
         return PYTHON_OUTPUT_FOLDER + "/" + substructure
 
+    
+def _strip_vocab(property):
+    return property.split('/')[-1]
 
-def _fix_property_name(property):
+
+def _fix_property_name(property_p):
+    property = _strip_vocab(property_p)
     if property[0] == "@":
         return "at_" + property[1:]
     else:
@@ -25,7 +32,7 @@ def _fix_property_name(property):
 def _fix_property_names(properties):
     out = []
     for property in properties:
-        out.append(_fix_property_name(property))
+        out.append(_strip_vocab(_fix_property_name(property)))
 
     return out
 
@@ -80,7 +87,7 @@ def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
     for property in schema_dictionary["properties"]:
-        get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
+        get_dict_string += '\tdict["' + _strip_vocab(property) + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
 
@@ -94,7 +101,9 @@ def _build_save_string(schema_name):
     save_string += '\tfile_name = output_folder + self.type_name + "/" + str(self.UUID)\n'
     save_string += '\twith open(file_name, "w") as outfile:\n'
     save_string += '\t\timport json\n'
-    save_string += "\t\tjson.dump(self.get_dict(), outfile)\n"
+    save_string += '\t\tdata = {k:v for (k,v) in self.get_dict().items() if v != None}\n'
+    save_string += '\t\tdata["@context"] = {"@vocab": "https://openminds.ebrains.eu/vocab/"}\n'
+    save_string += "\t\tjson.dump(data, outfile)\n"
 
     return save_string
 
@@ -128,23 +137,184 @@ def build_constructor(schema_name, schema_namespace, schema_dictionary):
     return(d['__init__'])
 
 
+def _build_getter_string(property):
+    signature = "get_" + property
+
+    function_string = "def " + signature + "(self):\n"
+    function_string += "\treturn self." + property + "\n"
+
+    return (signature, function_string)
+
+
+def _build_getter_function(property):
+    d = {}
+    signature, function_string = _build_getter_string(property)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+
+def _build_setter_string(property, property_dict):
+    # Check if this a embedded type
+    if "_embeddedTypes" in property_dict:
+        signature = "add_" + property
+        function_string = "def " + signature + "(self, " + property + "):\n"
+        function_string += "\tprint('add embedded')\n"
+    # Check if this is a linked type
+    elif "then" in property_dict:
+        signature = "add_" + property
+        function_string = "def " + signature + "(self, " + property + "):\n"
+        function_string += "\tprint('add linked')\n"
+    else:
+        signature = "set_" + property
+        function_string = "def " + signature + "(self, " + property + "):\n"
+        function_string += "\tself." + property + " = " + property + "\n"
+
+    return (signature, function_string)
+
+
+def _build_setter_function(property, property_dict):
+    d = {}
+    signature, function_string = _build_setter_string(property, property_dict)
+    exec(function_string, d)
+
+    return(signature,(d[signature]))
+
+def classify_properties(schema_dict):
+    out_dict = {}
+    out_dict["embedded"] = []
+    out_dict["linked"] = []
+    out_dict["normal"] = []
+
+    for property in schema_dict["properties"]:
+        # Check if this a embedded type
+        if "_embeddedTypes" in schema_dict["properties"][property]:
+            out_dict["embedded"].append(property)
+        # Check if this is a linked type
+        elif "then" in schema_dict["properties"][property]:
+            out_dict["linked"].append(property)
+        # Now it is a "normal" property
+        else:
+            out_dict["normal"].append(property)
+
+    return out_dict
+
+
+def _build_normal_setter(property_p):
+    property = _strip_vocab(property_p)
+    signature = "set_" + property
+    function_string = "def " + signature + "(self, " + property + "):\n"
+    function_string += "\tself." + property + " = " + property + "\n"
+
+    d = {}
+    exec(function_string, d)
+
+    return (signature, d[signature])
+
+
+def _build_setter(properties_dict):
+    setter_functions = {}
+
+    properties_dict["normal"].remove("@id")
+    properties_dict["normal"].remove("@type")
+
+    for property in properties_dict["normal"]:
+        signature, func = _build_normal_setter(_fix_property_name(property))
+        setter_functions[signature] = func
+
+    for property in properties_dict["embedded"]:
+        signature, func = _build_normal_setter(_fix_property_name(property))
+        setter_functions[signature] = func
+
+    return setter_functions
+
+
+def _build_normal_getter(property_p):
+    property = _strip_vocab(property_p)
+    signature = "get_" + property
+    function_string = "def " + signature + "(self):\n"
+    function_string += "\treturn self." + property + "\n"
+
+    d = {}
+    exec(function_string, d)
+
+    return (signature, d[signature])
+
+
+def _build_getter(properties_dict):
+    getter_functions = {}
+
+    for property in properties_dict["normal"]:
+        signature, func = _build_normal_getter(_fix_property_name(property))
+        getter_functions[signature] = func
+
+    return getter_functions
+
+
+def _schema_resolve(schema_name):
+    schema_name = schema_name.split("/")[-1]
+    schema_name = schema_name[0].lower() + schema_name[1:]
+    schemas = requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/").text.split()
+    #print(schemas)
+    pattern = r'\b' + re.escape(schema_name) + r'\b'
+    #print(pattern)
+    indices = [i for i, x in enumerate(schemas) if re.search(pattern, x)]
+    #print(indices)
+
+    return schemas[indices[0]]
+
+def _init_embedded(property):
+    #print(property)
+    #return json.loads(requests.get(_schema_resolve(property["_embeddedTypes"][0])).text)
+    return generate(
+            json.loads(
+            requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/"
+                            + _schema_resolve(property)
+                        ).text
+                       )
+                    )
+
 def generate(schema):
-    with open(schema["filename"],'r') as f:
-        schema_dictionary = json.loads(f.read())
+    schema_dictionary = None
+    if "filename" in schema:
+        with open(schema["filename"],'r') as f:
+            schema_dictionary = json.loads(f.read())
+            jsonschema.Draft7Validator.check_schema(schema_dictionary)
 
+    else:
+        schema_dictionary = schema
         jsonschema.Draft7Validator.check_schema(schema_dictionary)
+        schema_name = schema_dictionary["properties"]["@type"]["const"].split("/")[-1]
+        schema_namespace = schema_dictionary["properties"]["@type"]["const"].split("/")[-2]
+        #print("schema_name " + schema_name)
+        #print("schema_namespace " + schema_namespace)
+        schema_dictionary["name"] = schema_name
+        schema_dictionary["namespace"] = schema_namespace
 
-        #class_dictionary = {"__doc__": schema_dictionary["description"]}
-        class_dictionary = {}
+    #class_dictionary = {"__doc__": schema_dictionary["description"]}
+    class_dictionary = {}
 
-        for property in schema_dictionary["properties"]:
-            class_dictionary[_fix_property_name(property)] = None
+    properties = classify_properties(schema_dictionary)
 
-        class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
-        class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
-        class_dictionary["save"] = build_save(schema["name"])
+    for property in properties["normal"]:
+        class_dictionary[_fix_property_name(property)] = None
 
-        return type(schema["name"], (object,), class_dictionary)
+    for property in properties["embedded"]:
+        class_dictionary[_fix_property_name(property)] = None
+
+    for property in properties["linked"]:
+        class_dictionary[_fix_property_name(property)] = None
+
+    setter_functions = _build_setter(properties)
+    getter_functions = _build_getter(properties)
+    class_dictionary.update(setter_functions)
+    class_dictionary.update(getter_functions)
+
+    class_dictionary["__init__"] = build_constructor(schema["name"], schema["namespace"], schema_dictionary)
+    class_dictionary["get_dict"] = build_get_dict(schema_dictionary)
+    class_dictionary["save"] = build_save(schema["name"])
+
+    return type(schema["name"], (object,), class_dictionary)
 
 
 def generate_file(schema):
