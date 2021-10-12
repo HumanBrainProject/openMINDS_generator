@@ -106,12 +106,10 @@ def select_version():
 
     version_selection(selected_version)
 
-def init():
-    init(os.path.join(Path.home(), DEFAULT_DIRECTORY)
-    
-@click.command()
-@click.option("--target_dir", default=os.path.join(Path.home(), DEFAULT_DIRECTORY), help="Destination directory for downloaded openMINDS.\nDefault is .openMINDS in the user home-directory.")
-def init(target_dir):
+def init(target_dir=None):
+    if target_dir is None:
+        target_dir = os.path.join(Path.home(), DEFAULT_DIRECTORY)
+        
     download_openMINDS(target_dir)
 
     config = {
@@ -121,8 +119,13 @@ def init(target_dir):
 
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f)
+        
 
-    
+@click.command()
+@click.option("--target_dir", default=os.path.join(Path.home(), DEFAULT_DIRECTORY), help="Destination directory for downloaded openMINDS.\nDefault is .openMINDS in the user home-directory.")
+def init_repo(target_dir):
+    init(target_dir)
+        
 
 @click.command()
 def update():
@@ -146,7 +149,7 @@ def status():
     print("")
     
     
-version_manager_cli.add_command(init)
+version_manager_cli.add_command(init_repo)
 version_manager_cli.add_command(update)
 version_manager_cli.add_command(select_version)
 version_manager_cli.add_command(status)
