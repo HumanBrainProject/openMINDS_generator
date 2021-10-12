@@ -35,6 +35,7 @@ As stated above, the openMINDS Python allows you the dynamic usage of openMINDS 
 
 ```python
 import openMINDS
+import openMINDS.version_manager
 
 # Initialise the local copy of openMINDS
 openMINDS.version_manager.init()
@@ -49,17 +50,20 @@ helper = openMINDS.Helper()
 mycollection = helper.create_collection()
 
 # create a metadata instance for (e.g.) the openMINDS Person schema
-givenName_open = mycollection.add_core_person(givenName="open")
+person_open = mycollection.add_core_person(givenName="open")
 
 # add more metadata to a created instance
-mycollection.get(givenName_open).familyName = "MINDS"
+mycollection.get(person_open).familyName = "MINDS"
 
 # add connections to other metadata instances
 email_openminds = mycollection.add_core_contactInformation(email="openminds@ebrains.eu")
-mycollection.get(givenName_open).contactInformation = email_openminds
+mycollection.get(person_open).contactInformation = email_openminds
 
 # save your collection
 mycollection.save("./myFirstOpenMINDSMetadataCollection/")
+
+# Getting help for properties
+mycollection.help_core_actors_person()
 ```
 
 This example generates two linked JSON-LDs, one conform with the openMINDS (v3) Person schema and the other conform with the openMINDS (v3) ContactInformation schema.
