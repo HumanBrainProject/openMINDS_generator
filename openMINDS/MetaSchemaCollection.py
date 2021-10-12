@@ -1,12 +1,12 @@
 import json
 
 def _strip_vocab(parameter_list):
-    print(parameter_list)
+    #print(parameter_list)
     stripped_parameter_list = []
     for parameter in parameter_list:
         stripped_parameter_list.append(parameter.split('/')[-1])
 
-    print(stripped_parameter_list)
+    #print(stripped_parameter_list)
     return stripped_parameter_list
 
 def _get_required_properties_list(schema):
@@ -30,7 +30,7 @@ def get_constructor_params(schema):
 
 def _build_adder_string(schema_dict):
     required_properties = get_constructor_params(schema_dict)
-    print("Required properties: " + required_properties)
+    #print("Required properties: " + required_properties)
     signature = "add_" + schema_dict["namespace"] + "_" + schema_dict["name"]
 
     function_string = "def " + signature + "(self, " + required_properties + "):\n"
@@ -45,8 +45,8 @@ def _build_adder_string(schema_dict):
 def build_adder(schema_dict):
     d = {}
     signature, function_string = _build_adder_string(schema_dict)
-    print(signature)
-    print(function_string)
+    #print(signature)
+    #print(function_string)
     exec(function_string, d)
 
     return(signature,(d[signature]))

@@ -87,7 +87,7 @@ def _build_get_dict_string(schema_dictionary):
     get_dict_string = "def get_dict(self):\n"
     get_dict_string += "\tdict = {}\n"
     for property in schema_dictionary["properties"]:
-        get_dict_string += '\tdict["' + property + '"] = self.' + _fix_property_name(property) + "\n"
+        get_dict_string += '\tdict["' + _strip_vocab(property) + '"] = self.' + _fix_property_name(property) + "\n"
 
     get_dict_string += "\treturn dict"
 
@@ -255,16 +255,16 @@ def _schema_resolve(schema_name):
     schema_name = schema_name.split("/")[-1]
     schema_name = schema_name[0].lower() + schema_name[1:]
     schemas = requests.get("https://object.cscs.ch/v1/AUTH_227176556f3c4bb38df9feea4b91200c/openMINDS/").text.split()
-    print(schemas)
+    #print(schemas)
     pattern = r'\b' + re.escape(schema_name) + r'\b'
-    print(pattern)
+    #print(pattern)
     indices = [i for i, x in enumerate(schemas) if re.search(pattern, x)]
-    print(indices)
+    #print(indices)
 
     return schemas[indices[0]]
 
 def _init_embedded(property):
-    print(property)
+    #print(property)
     #return json.loads(requests.get(_schema_resolve(property["_embeddedTypes"][0])).text)
     return generate(
             json.loads(
@@ -286,8 +286,8 @@ def generate(schema):
         jsonschema.Draft7Validator.check_schema(schema_dictionary)
         schema_name = schema_dictionary["properties"]["@type"]["const"].split("/")[-1]
         schema_namespace = schema_dictionary["properties"]["@type"]["const"].split("/")[-2]
-        print("schema_name " + schema_name)
-        print("schema_namespace " + schema_namespace)
+        #print("schema_name " + schema_name)
+        #print("schema_namespace " + schema_namespace)
         schema_dictionary["name"] = schema_name
         schema_dictionary["namespace"] = schema_namespace
 

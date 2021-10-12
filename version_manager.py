@@ -106,6 +106,9 @@ def select_version():
 
     version_selection(selected_version)
 
+def init():
+    init(os.path.join(Path.home(), DEFAULT_DIRECTORY)
+    
 @click.command()
 @click.option("--target_dir", default=os.path.join(Path.home(), DEFAULT_DIRECTORY), help="Destination directory for downloaded openMINDS.\nDefault is .openMINDS in the user home-directory.")
 def init(target_dir):
