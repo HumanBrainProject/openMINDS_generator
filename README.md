@@ -36,6 +36,7 @@ As stated above, the openMINDS Python allows you the dynamic usage of openMINDS 
 ```python
 import openMINDS
 
+# Initialise the local copy of openMINDS
 openMINDS.version_manager.init()
 
 openMINDS.version_manager.version_selection('v2.0.0')
