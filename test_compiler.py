@@ -1,6 +1,6 @@
-import openMINDS.compiler
+import openMINDS
 
-helper = openMINDS.compiler.Helper()
+helper = openMINDS.Helper()
 mycollection = helper.create_collection()
 lyuba = mycollection.add_core_person(givenName="Lyuba")
 mycollection.help_core_data_copyright()
