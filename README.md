@@ -37,7 +37,7 @@ As stated above, the openMINDS Python allows you the dynamic usage of openMINDS 
 import openMINDS
 
 # initiate the helper class for the dynamic usage of a specific openMINDS version
-helper = openMINDS.Helper(version="v3")
+helper = openMINDS.Helper()
 
 # initiate the collection into which you will store all metadata instances
 mycollection = helper.create_collection()
