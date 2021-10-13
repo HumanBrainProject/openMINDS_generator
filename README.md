@@ -37,7 +37,11 @@ As stated above, the openMINDS Python allows you the dynamic usage of openMINDS 
 import openMINDS
 import openMINDS.version_manager
 
-# Initialise the local copy of openMINDS
+# Initialise a local copy of openMINDS
+import openMINDS
+import openMINDS.version_manager
+
+# Initialise a local copy of openMINDS
 openMINDS.version_manager.init()
 
 # Select which version of openMINDS to use
@@ -62,8 +66,6 @@ mycollection.get(person_open).contactInformation = email_openminds
 # save your collection
 mycollection.save("./myFirstOpenMINDSMetadataCollection/")
 
-# Getting help for properties
-mycollection.help_core_actors_person()
 ```
 
 This example generates two linked JSON-LDs, one conform with the openMINDS (v3) Person schema and the other conform with the openMINDS (v3) ContactInformation schema.
@@ -73,7 +75,8 @@ To learn in general about the available openMINDS metadata models, schemas and t
 Within the openMINDS Python you can also get an overview of the requirements of a schema and all its properties by using the 'help_X' function. Here an example:
 
 ```python
-mycollection.help_core_person()
+# Getting help for expected schema properties
+mycollection.help_core_actors_person()
 ```
 
 
