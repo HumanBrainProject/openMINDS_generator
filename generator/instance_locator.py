@@ -23,6 +23,9 @@ class InstanceLocator(object):
             for instance_path in glob.glob(os.path.join(self.root_path, instance_dir, f'**/*{INSTANCE_FILE_ENDING}'), recursive=True):
                 with open(instance_path, "r") as instance_file:
                     payload = json.load(instance_file)
+                if "@type" not in payload or "@id" not in payload:
+                    print(f"Can't process {instance_path} since it doesn't contain both @type and @id")
+                    continue
                 types = payload["@type"]
                 if types and type(types) is not list:
                     types = [types]
