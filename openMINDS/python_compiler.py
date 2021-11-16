@@ -78,7 +78,7 @@ def _build_constructor_string(schema_name, schema_namespace, schema_dictionary):
     constructor_string += '\tself.type_name = "' + schema_name + '"\n'
     constructor_string += '\tself.type_namespace = "' + schema_namespace + '"\n'
     constructor_string += '\tself.at_id = "https://localhost/" + self.type_name + "/" + str(self.UUID)\n'
-    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/" + self.type_namespace + "/" + self.type_name.title()\n'
+    constructor_string += '\tself.at_type = "https://openminds.ebrains.eu/" + self.type_namespace + "/" + self.type_name[0].upper() + self.type_name[1:]\n'
 
     return constructor_string
 
