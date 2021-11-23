@@ -34,10 +34,7 @@ The latest unstable version is available on this GitHub.
 As stated above, the openMINDS Python allows you the dynamic usage of openMINDS metadata models and schemas in your Python application for generating your own collection of openMINDS conform metadata representations (instances) as JSON-LDs. Here a small example:
 
 ```python
-import openMINDS
-import openMINDS.version_manager
-
-# Initialise a local copy of openMINDS
+# Import openMINDS and version manager
 import openMINDS
 import openMINDS.version_manager
 
