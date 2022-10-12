@@ -102,6 +102,7 @@ class Generator(object):
         self.written_files = []
 
     def generate(self, ignore=None):
+        self._pre_generate(ignore=ignore)
         if os.path.exists(self.target_path):
             print("clearing previously generated files")
             shutil.rmtree(self.target_path)
@@ -111,26 +112,37 @@ class Generator(object):
             print(f"handle {schema_group}")
             schema_group_path = os.path.join(expanded_path, schema_group)
             for schema_path in glob.glob(os.path.join(schema_group_path, f'**/*{SCHEMA_FILE_ENDING}'), recursive=True):
-                relative_schema_path = os.path.dirname(schema_path[len(schema_group_path) + 1:])
-                schema_file_name = os.path.basename(schema_path)
-                schema_file_name_without_extension = schema_file_name[:-len(SCHEMA_FILE_ENDING)]
                 with open(schema_path, "r") as schema_file:
                     schema = json.load(schema_file)
                 self._pre_process_template(schema)
-                os.makedirs(os.path.join(self.target_path, schema_group, relative_schema_path), exist_ok=True)
-                target_file_path = os.path.join(self.target_path, schema_group, relative_schema_path,
-                                                f"{schema_file_name_without_extension}.{self.format}")
+
+                self._generate_additional_files(schema_group, schema_group_path, schema_path, schema)
+                target_file_path = self._generate_target_file_path(schema_group, schema_group_path, schema_path)
                 print(f"Rendering {target_file_path}")
                 result = self._process_template(schema)
                 with open(target_file_path, "w", encoding="utf-8") as target_file:
                     target_file.write(result)
                 self.written_files.append(target_file_path)
 
+    def _generate_additional_files(self, schema_group, schema_group_path, schema_path, schema):
+        relative_schema_path = os.path.dirname(schema_path[len(schema_group_path) + 1:])
+        os.makedirs(os.path.join(self.target_path, schema_group, relative_schema_path), exist_ok=True)
+
+    def _generate_target_file_path(self, schema_group, schema_group_path, schema_path):
+        relative_schema_path = os.path.dirname(schema_path[len(schema_group_path) + 1:])
+        schema_file_name = os.path.basename(schema_path)
+        schema_file_name_without_extension = schema_file_name[:-len(SCHEMA_FILE_ENDING)]
+        return os.path.join(self.target_path, schema_group, relative_schema_path,
+                            f"{schema_file_name_without_extension}.{self.format}")
+
     def _process_template(self, schema) -> str:
         return schema
 
     def _pre_process_template(self, schema):
         return schema
+
+    def _pre_generate(self, ignore=None):
+        pass
 
 
 class JinjaGenerator(Generator):
