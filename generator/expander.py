@@ -39,16 +39,17 @@ class Expander(object):
                     schema["description"] = t["description"]
                 if "name" in t and t["name"]:
                     schema["title"] = t["name"]
-            for p in schema["properties"]:
-                qualified_p = f"{self.vocab}{p}"
-                if qualified_p in properties:
-                    prop = properties[qualified_p]
-                    if "description" in prop and prop["description"]:
-                        schema["properties"][p]["description"] = prop["description"]
-                    if "name" in prop and prop["name"]:
-                        schema["properties"][p]["title"] = prop["name"]
-                    if "sameAs" in prop and prop["sameAs"]:
-                        schema["properties"][p]["_sameAs"] = prop["sameAs"]
+            if "properties" in schema:
+                for p in schema["properties"]:
+                    qualified_p = f"{self.vocab}{p}"
+                    if qualified_p in properties:
+                        prop = properties[qualified_p]
+                        if "description" in prop and prop["description"]:
+                            schema["properties"][p]["description"] = prop["description"]
+                        if "name" in prop and prop["name"]:
+                            schema["properties"][p]["title"] = prop["name"]
+                        if "sameAs" in prop and prop["sameAs"]:
+                            schema["properties"][p]["_sameAs"] = prop["sameAs"]
             with open(schema_info.absolute_path, "w") as schema_file:
                 schema_file.write(json.dumps(schema, indent=4))
 
