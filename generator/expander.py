@@ -6,7 +6,8 @@ from json.decoder import JSONDecodeError
 from typing import List
 
 from generator.commons import TEMPLATE_PROPERTY_EXTENDS, TEMPLATE_PROPERTY_TYPE, find_resource_directories, EXPANDED_DIR, SCHEMA_FILE_ENDING, SchemaStructure, \
-    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES
+    TEMPLATE_PROPERTY_CATEGORIES, TEMPLATE_PROPERTY_LINKED_CATEGORIES, TEMPLATE_PROPERTY_LINKED_TYPES, TEMPLATE_PROPERTY_EMBEDDED_CATEGORIES, \
+    TEMPLATE_PROPERTY_EMBEDDED_TYPES
 
 class Expander(object):
 
@@ -156,6 +157,14 @@ class Expander(object):
                             linked_types.extend(self._schemas_by_category[linked_category])
                     schema_payload["properties"][p][TEMPLATE_PROPERTY_LINKED_TYPES] = linked_types
                     del schema_payload["properties"][p][TEMPLATE_PROPERTY_LINKED_CATEGORIES]
+                if TEMPLATE_PROPERTY_EMBEDDED_CATEGORIES in schema_payload["properties"][p]:
+                    embedded_categories = schema_payload["properties"][p][TEMPLATE_PROPERTY_EMBEDDED_CATEGORIES]
+                    embedded_types = []
+                    for embedded_category in embedded_categories:
+                        if embedded_category in self._schemas_by_category:
+                            embedded_types.extend(self._schemas_by_category[embedded_category])
+                    schema_payload["properties"][p][TEMPLATE_PROPERTY_EMBEDDED_TYPES] = embedded_types
+                    del schema_payload["properties"][p][TEMPLATE_PROPERTY_EMBEDDED_CATEGORIES]
         with open(schema.absolute_path, "w") as target_file:
             target_file.write(json.dumps(schema_payload, indent=4))
 
