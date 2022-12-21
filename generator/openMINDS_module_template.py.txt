@@ -1,0 +1,36 @@
+"""
+{{docstring}}
+"""
+
+# this file was auto-generated
+
+from datetime import date, datetime
+import {{ base_class }}, IRI
+import Field
+
+{{preamble}}
+
+
+class {{ class_name }}({{ base_class }}):
+    """
+    {{ docstring }}
+    """
+    {%- if default_space %}
+    default_space = "{{ default_space }}"
+    {%- endif %}
+    type = ["{{ openminds_type }}"]
+    context = {
+        "vocab": "https://openminds.ebrains.eu/vocab/"
+    }
+    
+    fields = [
+        {% for field in fields -%}
+        Field("{{field.name}}", {{field.type}}, "{{field.iri}}", multiple={{field.allow_multiple}}, required={{field.required}},
+              doc="{{field.doc}}"),
+        {% endfor %}
+    ]
+    {%- if default_space %}
+    existence_query_fields = {{ existence_query_fields }}
+    {%- endif %}
+
+{{ additional_methods }}
