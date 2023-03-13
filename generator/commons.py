@@ -12,6 +12,7 @@ TEMPLATE_PROPERTY_EMBEDDED_TYPES = "_embeddedTypes"
 TEMPLATE_PROPERTY_FORMATS = "_formats"
 TEMPLATE_PROPERTY_CATEGORIES = "_categories"
 TEMPLATE_PROPERTY_LINKED_CATEGORIES = "_linkedCategories"
+TEMPLATE_PROPERTY_EMBEDDED_CATEGORIES = "_embeddedCategories"
 
 OPENMINDS_VOCAB="https://openminds.ebrains.eu/vocab/"
 
