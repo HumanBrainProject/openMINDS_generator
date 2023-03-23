@@ -379,20 +379,6 @@ class PythonGenerator(JinjaGenerator):
             }
             fields.append(field)
 
-        # for builtin_type in ("str", "int", "float"):
-        #     try:
-        #         imports.remove(builtin_type)
-        #     except KeyError:
-        #         pass
-
-        # if imports:
-        #     if len(imports) == 1:
-        #         import_str = f"from fairgraph.openminds.?? import {list(imports)[0]}"
-        #     else:
-        #         import_str = "from fairgraph.openminds.?? import ({})".format(", ".join(sorted(imports)))
-        # else:
-        #     import_str = ""
-
         # if a given type is found both linked and embedded we use KGObject
         if schema["_type"] in self._embedded_types and not schema["_type"] in self._linked_types:
             base_class = "EmbeddedMetadata"
