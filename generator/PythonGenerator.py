@@ -112,118 +112,118 @@ def invert_dict(D):
     return newD
 
 
-DEFAULT_SPACES = {
-    "core":
-    invert_dict(
-        {
-            "common": [
-                "Affiliation",
-                "Configuration",
-                "Comment",
-                "Funding",
-                "GRIDID",
-                "HANDLE",
-                "HardwareSystem",
-                "ORCID",
-                "Organization",
-                "Person",
-                "Project",
-                "Query",
-                "RORID",
-                "TermSuggestion",
-                "URL",
-                "RRID"
-            ],
-            "files": [
-                "ContentTypePattern",
-                "File",
-                "FileBundle",
-                "FilePathPattern",
-                "FileRepositoryStructure",
-                "Hash"
-            ],
-            "dataset": [
-                "Contribution",
-                "Copyright",
-                "DOI",
-                "Dataset",
-                "DatasetVersion",
-                "FileArchive",
-                "FileRepository",
-                "ISBN",
-                "ISSN",
-                "NumericalParameter",
-                "ParameterSet",
-                "PropertyValueList",
-                "Protocol",
-                "ExperimentalActivity",
-                "ProtocolExecution",
-                "QuantitativeValue",
-                "QuantitativeValueRange",
-                "QuantitativeValueArray",
-                "ServiceLink",
-                "StringParameter",
-                "Subject",
-                "SubjectGroup",
-                "SubjectGroupState",
-                "SubjectState",
-                "TissueSample",
-                "TissueSampleCollection",
-                "TissueSampleCollectionState",
-                "TissueSampleState",
-                "BehavioralProtocol",
-                "Stimulation",
-                "Strain"
-            ],
-            "model": ["Model", "ModelVersion"],
-            "software": ["SWHID", "Software", "SoftwareVersion"],
-            "restricted": ["ContactInformation"],
-            "metadatamodel": ["MetaDataModel", "MetaDataModelVersion"],
-            "controlled": ["License", "ContentType"]
-        }),
-    "computation": {
-        "default": "computation"
-    },
-    "controlledTerms": {
-        "default": "controlled"
-    },
-    "SANDS":
-    invert_dict(
-        {
-            "spatial": [
-                "AnatomicalEntity",
-                "Annotation",
-                "CoordinatePoint",
-                "CustomAnatomicalEntity",
-                "CustomAnnotation",
-                "CustomCoordinateSpace",
-                "Image",
-                "QualitativeRelationAssessment",
-                "QuantitativeRelationAssessment"
-            ],
-            "atlas": [
-                "AnatomicalTargetPosition",
-                "AtlasAnnotation",
-                "BrainAtlas",
-                "BrainAtlasVersion",
-                "Circle",
-                "CommonCoordinateSpace",
-                "CoordinatePoint",
-                "Ellipse",
-                "ParcellationEntity",
-                "ParcellationTerminology",
-                "ParcellationTerminologyVersion",
-                "ParcellationEntityVersion",
-                "Rectangle"
-            ]
-        }),
-    "publications": {
-        "default": "publications"
-    },
-    "ephys": {
-        "default": "electrophysiology"
-    }
-}
+#DEFAULT_SPACES = {
+#    "core":
+#    invert_dict(
+#        {
+#            "common": [
+#                "Affiliation",
+#                "Configuration",
+#                "Comment",
+#                "Funding",
+#                "GRIDID",
+#                "HANDLE",
+#                "HardwareSystem",
+#                "ORCID",
+#                "Organization",
+#                "Person",
+#                "Project",
+#                "Query",
+#                "RORID",
+#                "TermSuggestion",
+#                "URL",
+#                "RRID"
+#            ],
+#            "files": [
+#                "ContentTypePattern",
+#                "File",
+#                "FileBundle",
+#                "FilePathPattern",
+#                "FileRepositoryStructure",
+#                "Hash"
+#            ],
+#            "dataset": [
+#                "Contribution",
+#                "Copyright",
+#                "DOI",
+#                "Dataset",
+#                "DatasetVersion",
+#                "FileArchive",
+#                "FileRepository",
+#                "ISBN",
+#                "ISSN",
+#                "NumericalParameter",
+#                "ParameterSet",
+#                "PropertyValueList",
+#                "Protocol",
+#                "ExperimentalActivity",
+#                "ProtocolExecution",
+#                "QuantitativeValue",
+#                "QuantitativeValueRange",
+#                "QuantitativeValueArray",
+#                "ServiceLink",
+#                "StringParameter",
+#                "Subject",
+#                "SubjectGroup",
+#                "SubjectGroupState",
+#                "SubjectState",
+#                "TissueSample",
+#                "TissueSampleCollection",
+#                "TissueSampleCollectionState",
+#                "TissueSampleState",
+#                "BehavioralProtocol",
+#                "Stimulation",
+#                "Strain"
+#            ],
+#            "model": ["Model", "ModelVersion"],
+#            "software": ["SWHID", "Software", "SoftwareVersion"],
+#            "restricted": ["ContactInformation"],
+#            "metadatamodel": ["MetaDataModel", "MetaDataModelVersion"],
+#            "controlled": ["License", "ContentType"]
+#        }),
+#    "computation": {
+#        "default": "computation"
+#    },
+#    "controlledTerms": {
+#        "default": "controlled"
+#    },
+#    "SANDS":
+#    invert_dict(
+#        {
+#            "spatial": [
+#                "AnatomicalEntity",
+#                "Annotation",
+#                "CoordinatePoint",
+#                "CustomAnatomicalEntity",
+#                "CustomAnnotation",
+#                "CustomCoordinateSpace",
+#                "Image",
+#                "QualitativeRelationAssessment",
+#                "QuantitativeRelationAssessment"
+#            ],
+#            "atlas": [
+#                "AnatomicalTargetPosition",
+#                "AtlasAnnotation",
+#                "BrainAtlas",
+#                "BrainAtlasVersion",
+#                "Circle",
+#                "CommonCoordinateSpace",
+#                "CoordinatePoint",
+#                "Ellipse",
+#                "ParcellationEntity",
+#                "ParcellationTerminology",
+#                "ParcellationTerminologyVersion",
+#                "ParcellationEntityVersion",
+#                "Rectangle"
+#            ]
+#        }),
+#    "publications": {
+#        "default": "publications"
+#    },
+#    "ephys": {
+#        "default": "electrophysiology"
+#    }
+#}
 
 
 def get_default_space(schema_group, cls_name):
