@@ -181,8 +181,7 @@ class PythonGenerator(JinjaGenerator):
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
             "docstring": schema.get("description", ""),
             "fields": fields,
-            #"preamble": preamble.get(schema["simpleTypeName"], ""),
-            #"additional_methods": additional_methods.get(schema["simpleTypeName"], "")
+            #"preamble": preamble.get(schema["simpleTypeName"], "")
         }
         schema.update(context)
         self.import_data[schema["schemaGroup"]][schema[TEMPLATE_PROPERTY_TYPE]] = {
