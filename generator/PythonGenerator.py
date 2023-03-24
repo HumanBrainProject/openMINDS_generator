@@ -103,21 +103,6 @@ def generate_doc(property, obj_title):
     doc = doc.replace("a being or thing", f"the {obj_title_readable}")
     return doc
 
-#def get_existence_query(cls_name, fields):
-#    if cls_name in custom_existence_queries:
-#        return custom_existence_queries[cls_name]
-#
-#    for field in fields:
-#        if field["name"] == "lookup_label":
-#            return ("lookup_label", )
-#
-#    required_field_names = []
-#    for field in fields:
-#        if field["required"]:
-#            required_field_names.append(field["name"])
-#    return tuple(required_field_names)
-# TODO
-
 def property_name_sort_key(arg):
     """Sort the name field to be first"""
     name, property = arg
