@@ -240,7 +240,8 @@ class PythonGenerator(JinjaGenerator):
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
             "docstring": schema.get("description", ""),
             "fields": fields,
-            "existence_query_fields": get_existence_query(schema["simpleTypeName"], fields),
+            #"existence_query_fields": get_existence_query(schema["simpleTypeName"], fields),
+            # TODO
             "preamble": preamble.get(schema["simpleTypeName"], ""),
             "additional_methods": additional_methods.get(schema["simpleTypeName"], "")
         }
