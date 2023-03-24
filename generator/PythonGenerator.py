@@ -68,16 +68,17 @@ custom_multiple = {
 
 
 def generate_python_name(json_name, allow_multiple=False):
-    if json_name in name_map:
-        python_name = name_map[json_name]
-    else:
-        python_name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", json_name)
-        python_name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", python_name).lower()
-        if allow_multiple and python_name[-1] != "s":
-            if python_name in custom_multiple:
-                python_name = custom_multiple[python_name]
-            else:
-                python_name += "s"
+#    if json_name in name_map:
+#        python_name = name_map[json_name]
+#    else:
+# TODO
+    python_name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", json_name)
+    python_name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", python_name).lower()
+    if allow_multiple and python_name[-1] != "s":
+        if python_name in custom_multiple:
+            python_name = custom_multiple[python_name]
+        else:
+            python_name += "s"
     return python_name
 
 
