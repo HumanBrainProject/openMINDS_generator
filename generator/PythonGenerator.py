@@ -372,7 +372,6 @@ class PythonGenerator(JinjaGenerator):
             default_space = None
         else:
             base_class = "OpenMINDS_Base"
-            #default_space = get_default_space(schema["schemaGroup"], schema["simpleTypeName"])
         context = {
             #"imports": import_str,
             "class_name": generate_class_name(schema[TEMPLATE_PROPERTY_TYPE]).split(".")[-1],
