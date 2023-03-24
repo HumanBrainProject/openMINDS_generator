@@ -59,13 +59,8 @@ custom_multiple = {
 def generate_python_name(json_name, allow_multiple=False):
     python_name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", json_name)
     python_name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", python_name).lower()
-    if allow_multiple and python_name[-1] != "s":
-        if python_name in custom_multiple:
-            python_name = custom_multiple[python_name]
-        else:
-            python_name += "s"
-    return python_name
 
+    return python_name
 
 type_name_map = {
     "string": "str",
