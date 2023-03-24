@@ -30,17 +30,6 @@ def list_kg_classes():
            if inspect.isclass(obj) and issubclass(obj, KGObject) and obj.__module__.startswith(__name__)]
 '''
 
-# for backwards compatibility or to increase clarity we remap certain
-# names from the schemas when creating Python attribute names
-#name_map = {
-#    "shortName": "alias",
-#    "fullName": "name",
-#    "scope": "model_scope",
-#    "hasVersion": "versions",
-#    "hasEntity": "entities",
-#}
-# TODO
-
 # in general we make attribute names plural when the attribute can contain multiple items
 # the following dict contains exceptions to the simple rule we use for making names plural
 # (i.e. add 's' unless the word already ends in 's')
