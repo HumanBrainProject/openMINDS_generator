@@ -271,41 +271,41 @@ def strip_trailing_whitespace(s):
     return "\n".join([line.rstrip() for line in s.splitlines()])
 
 
-preamble = {
-    "File":
-    """
-import os
-import hashlib
-import mimetypes
-from pathlib import Path
-from urllib.request import urlretrieve
-from urllib.parse import quote, urlparse, urlunparse
-from .hash import Hash
-from .content_type import ContentType
-from ..miscellaneous.quantitative_value import QuantitativeValue
-from ...controlledterms.unit_of_measurement import UnitOfMeasurement
-from fairgraph.utility import accepted_terms_of_use
+# preamble = {
+#     "File":
+#     """
+# import os
+# import hashlib
+# import mimetypes
+# from pathlib import Path
+# from urllib.request import urlretrieve
+# from urllib.parse import quote, urlparse, urlunparse
+# from .hash import Hash
+# from .content_type import ContentType
+# from ..miscellaneous.quantitative_value import QuantitativeValue
+# from ...controlledterms.unit_of_measurement import UnitOfMeasurement
+# from fairgraph.utility import accepted_terms_of_use
 
-mimetypes.init()
+# mimetypes.init()
 
-def sha1sum(filename):
-    BUFFER_SIZE = 128*1024
-    h = hashlib.sha1()
-    with open(filename, 'rb') as fp:
-        while True:
-            data = fp.read(BUFFER_SIZE)
-            if not data:
-                break
-            h.update(data)
-    return h.hexdigest()
-    """,
-    "DatasetVersion":
-    """
-from urllib.request import urlretrieve
-from pathlib import Path
-from fairgraph.utility import accepted_terms_of_use
-    """
-}
+# def sha1sum(filename):
+#     BUFFER_SIZE = 128*1024
+#     h = hashlib.sha1()
+#     with open(filename, 'rb') as fp:
+#         while True:
+#             data = fp.read(BUFFER_SIZE)
+#             if not data:
+#                 break
+#             h.update(data)
+#     return h.hexdigest()
+#     """,
+#     "DatasetVersion":
+#     """
+# from urllib.request import urlretrieve
+# from pathlib import Path
+# from fairgraph.utility import accepted_terms_of_use
+#     """
+# }
 
 additional_methods = {
     "Person":
