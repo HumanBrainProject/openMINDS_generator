@@ -214,7 +214,6 @@ class PythonGenerator(JinjaGenerator):
                 possible_types = [type_name_map[property["items"]["type"]]]
             else:
                 possible_types = [type_name_map[property["type"]]]
-            #imports.update(possible_types)
             if len(possible_types) == 1:
                 possible_types_str = possible_types[0]
             else:
