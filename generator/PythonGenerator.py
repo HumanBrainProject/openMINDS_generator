@@ -373,7 +373,6 @@ class PythonGenerator(JinjaGenerator):
         else:
             base_class = "OpenMINDS_Base"
         context = {
-            #"imports": import_str,
             "class_name": generate_class_name(schema[TEMPLATE_PROPERTY_TYPE]).split(".")[-1],
             "base_class": base_class,
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
