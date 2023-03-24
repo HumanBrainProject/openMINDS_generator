@@ -193,7 +193,6 @@ class PythonGenerator(JinjaGenerator):
         # self.schema_collection_by_group[schema["schemaGroup"]].append(schema_information)
 
         fields = []
-        #imports = set([])
         for name, property in sorted(schema["properties"].items(), key=property_name_sort_key):
             allow_multiple = False
             if property.get("type") == "array":
