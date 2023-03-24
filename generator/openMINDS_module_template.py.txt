@@ -29,8 +29,5 @@ class {{ class_name }}({{ base_class }}):
               doc="{{field.doc}}"),
         {% endfor %}
     ]
-    {%- if default_space %}
-    existence_query_fields = {{ existence_query_fields }}
-    {%- endif %}
 
 {{ additional_methods }}
