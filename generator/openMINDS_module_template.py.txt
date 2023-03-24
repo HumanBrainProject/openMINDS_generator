@@ -15,9 +15,6 @@ class {{ class_name }}({{ base_class }}):
     """
     {{ docstring }}
     """
-    {%- if default_space %}
-    default_space = "{{ default_space }}"
-    {%- endif %}
     type = ["{{ openminds_type }}"]
     context = {
         "vocab": "https://openminds.ebrains.eu/vocab/"
