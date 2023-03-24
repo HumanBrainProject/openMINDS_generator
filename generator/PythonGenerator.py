@@ -103,60 +103,6 @@ def generate_doc(property, obj_title):
     doc = doc.replace("a being or thing", f"the {obj_title_readable}")
     return doc
 
-# in general, we use the required fields when deciding whether a given object already exists
-# in the KG. Sometimes this method is inappropriate or undesired, and so for some classes
-# we use a custom set of fields.
-custom_existence_queries = {
-    "LaunchConfiguration": ("executable", "name"),
-    "Person": ("given_name", "family_name"),
-    "File": ("iri", "hash"),
-    "FileRepository": ("iri",),
-    "License": ("alias",),
-    "DOI": ("identifier",),
-    "GRIDID": ("identifier",),
-    "HANDLE": ("identifier",),
-    "ISBN": ("identifier",),
-    "ORCID": ("identifier",),
-    "RORID": ("identifier",),
-    "SWHID": ("identifier",),
-    "URL": ("url",),
-    "Dataset": ("alias", ),
-    "DatasetVersion": ("alias", "version_identifier"),
-    "MetaDataModel": ("alias", ),
-    "MetaDataModelVersion": ("alias", "version_identifier"),
-    "Model": ("name", ),  # here we use 'name' instead of 'alias' for backwards compatibility
-    "ModelVersion": ("name", "version_identifier"),
-    "Project": ("alias",),
-    "Software": ("alias",),
-    "SoftwareVersion": ("alias", "version_identifier"),
-    "Protocol": ("name",),
-    "BrainAtlas": ("digital_identifier", ),
-    "BrainAtlasVersion": ("alias", "version_identifier"),
-    "CommonCoordinateSpace": ("alias", "version_identifier"),
-    "ParcellationEntity": ("name",),
-    "ParcellationEntityVersion": ("name", "version_identifier"),
-    "ParcellationTerminologyVersion": ("alias", "version_identifier"),
-    "CustomCoordinateSpace": ("name",),
-    "WorkflowRecipe": ("name",),
-    "WorkflowRecipeVersion": ("name", "version_identifier"),
-}
-
-
-def get_existence_query(cls_name, fields):
-    if cls_name in custom_existence_queries:
-        return custom_existence_queries[cls_name]
-
-    for field in fields:
-        if field["name"] == "lookup_label":
-            return ("lookup_label", )
-
-    required_field_names = []
-    for field in fields:
-        if field["required"]:
-            required_field_names.append(field["name"])
-    return tuple(required_field_names)
-
-
 def property_name_sort_key(arg):
     """Sort the name field to be first"""
     name, property = arg
@@ -240,7 +186,6 @@ class PythonGenerator(JinjaGenerator):
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
             "docstring": schema.get("description", ""),
             "fields": fields,
-            "existence_query_fields": get_existence_query(schema["simpleTypeName"], fields),
             "preamble": preamble.get(schema["simpleTypeName"], ""),
             "additional_methods": additional_methods.get(schema["simpleTypeName"], "")
         }
