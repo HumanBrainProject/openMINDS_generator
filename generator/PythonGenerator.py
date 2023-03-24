@@ -30,16 +30,6 @@ def list_kg_classes():
            if inspect.isclass(obj) and issubclass(obj, KGObject) and obj.__module__.startswith(__name__)]
 '''
 
-# for backwards compatibility or to increase clarity we remap certain
-# names from the schemas when creating Python attribute names
-name_map = {
-    "shortName": "alias",
-    "fullName": "name",
-    "scope": "model_scope",
-    "hasVersion": "versions",
-    "hasEntity": "entities",
-}
-
 # in general we make attribute names plural when the attribute can contain multiple items
 # the following dict contains exceptions to the simple rule we use for making names plural
 # (i.e. add 's' unless the word already ends in 's')
@@ -67,16 +57,13 @@ custom_multiple = {
 
 
 def generate_python_name(json_name, allow_multiple=False):
-    if json_name in name_map:
-        python_name = name_map[json_name]
-    else:
-        python_name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", json_name)
-        python_name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", python_name).lower()
-        if allow_multiple and python_name[-1] != "s":
-            if python_name in custom_multiple:
-                python_name = custom_multiple[python_name]
-            else:
-                python_name += "s"
+    python_name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", json_name)
+    python_name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", python_name).lower()
+    if allow_multiple and python_name[-1] != "s":
+        if python_name in custom_multiple:
+            python_name = custom_multiple[python_name]
+        else:
+            python_name += "s"
     return python_name
 
 
