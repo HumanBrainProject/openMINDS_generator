@@ -103,142 +103,6 @@ def generate_doc(property, obj_title):
     doc = doc.replace("a being or thing", f"the {obj_title_readable}")
     return doc
 
-
-def invert_dict(D):
-    newD = {}
-    for key, values in D.items():
-        for value in values:
-            newD[value] = key
-    return newD
-
-
-DEFAULT_SPACES = {
-    "core":
-    invert_dict(
-        {
-            "common": [
-                "Affiliation",
-                "Configuration",
-                "Comment",
-                "Funding",
-                "GRIDID",
-                "HANDLE",
-                "HardwareSystem",
-                "ORCID",
-                "Organization",
-                "Person",
-                "Project",
-                "Query",
-                "RORID",
-                "TermSuggestion",
-                "URL",
-                "RRID"
-            ],
-            "files": [
-                "ContentTypePattern",
-                "File",
-                "FileBundle",
-                "FilePathPattern",
-                "FileRepositoryStructure",
-                "Hash"
-            ],
-            "dataset": [
-                "Contribution",
-                "Copyright",
-                "DOI",
-                "Dataset",
-                "DatasetVersion",
-                "FileArchive",
-                "FileRepository",
-                "ISBN",
-                "ISSN",
-                "NumericalParameter",
-                "ParameterSet",
-                "PropertyValueList",
-                "Protocol",
-                "ExperimentalActivity",
-                "ProtocolExecution",
-                "QuantitativeValue",
-                "QuantitativeValueRange",
-                "QuantitativeValueArray",
-                "ServiceLink",
-                "StringParameter",
-                "Subject",
-                "SubjectGroup",
-                "SubjectGroupState",
-                "SubjectState",
-                "TissueSample",
-                "TissueSampleCollection",
-                "TissueSampleCollectionState",
-                "TissueSampleState",
-                "BehavioralProtocol",
-                "Stimulation",
-                "Strain"
-            ],
-            "model": ["Model", "ModelVersion"],
-            "software": ["SWHID", "Software", "SoftwareVersion"],
-            "restricted": ["ContactInformation"],
-            "metadatamodel": ["MetaDataModel", "MetaDataModelVersion"],
-            "controlled": ["License", "ContentType"]
-        }),
-    "computation": {
-        "default": "computation"
-    },
-    "controlledTerms": {
-        "default": "controlled"
-    },
-    "SANDS":
-    invert_dict(
-        {
-            "spatial": [
-                "AnatomicalEntity",
-                "Annotation",
-                "CoordinatePoint",
-                "CustomAnatomicalEntity",
-                "CustomAnnotation",
-                "CustomCoordinateSpace",
-                "Image",
-                "QualitativeRelationAssessment",
-                "QuantitativeRelationAssessment"
-            ],
-            "atlas": [
-                "AnatomicalTargetPosition",
-                "AtlasAnnotation",
-                "BrainAtlas",
-                "BrainAtlasVersion",
-                "Circle",
-                "CommonCoordinateSpace",
-                "CoordinatePoint",
-                "Ellipse",
-                "ParcellationEntity",
-                "ParcellationTerminology",
-                "ParcellationTerminologyVersion",
-                "ParcellationEntityVersion",
-                "Rectangle"
-            ]
-        }),
-    "publications": {
-        "default": "publications"
-    },
-    "ephys": {
-        "default": "electrophysiology"
-    }
-}
-
-
-def get_default_space(schema_group, cls_name):
-    print("get_default_space")
-    if cls_name in DEFAULT_SPACES[schema_group]:
-        print(DEFAULT_SPACES[schema_group][cls_name])
-        return DEFAULT_SPACES[schema_group][cls_name]
-    else:
-        print("No default space")
-        print(cls_name)
-        print(schema_group)
-        print(DEFAULT_SPACES[schema_group])
-        return DEFAULT_SPACES[schema_group]["default"]
-
-
 # in general, we use the required fields when deciding whether a given object already exists
 # in the KG. Sometimes this method is inappropriate or undesired, and so for some classes
 # we use a custom set of fields.
@@ -329,7 +193,6 @@ class PythonGenerator(JinjaGenerator):
         # self.schema_collection_by_group[schema["schemaGroup"]].append(schema_information)
 
         fields = []
-        #imports = set([])
         for name, property in sorted(schema["properties"].items(), key=property_name_sort_key):
             allow_multiple = False
             if property.get("type") == "array":
@@ -351,7 +214,6 @@ class PythonGenerator(JinjaGenerator):
                 possible_types = [type_name_map[property["items"]["type"]]]
             else:
                 possible_types = [type_name_map[property["type"]]]
-            #imports.update(possible_types)
             if len(possible_types) == 1:
                 possible_types_str = possible_types[0]
             else:
@@ -372,11 +234,8 @@ class PythonGenerator(JinjaGenerator):
             default_space = None
         else:
             base_class = "OpenMINDS_Base"
-            #default_space = get_default_space(schema["schemaGroup"], schema["simpleTypeName"])
         context = {
-            #"imports": import_str,
             "class_name": generate_class_name(schema[TEMPLATE_PROPERTY_TYPE]).split(".")[-1],
-            #"default_space": default_space,
             "base_class": base_class,
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
             "docstring": schema.get("description", ""),
