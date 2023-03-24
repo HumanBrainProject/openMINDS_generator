@@ -226,17 +226,17 @@ def invert_dict(D):
 #}
 
 
-def get_default_space(schema_group, cls_name):
-    print("get_default_space")
-    if cls_name in DEFAULT_SPACES[schema_group]:
-        print(DEFAULT_SPACES[schema_group][cls_name])
-        return DEFAULT_SPACES[schema_group][cls_name]
-    else:
-        print("No default space")
-        print(cls_name)
-        print(schema_group)
-        print(DEFAULT_SPACES[schema_group])
-        return DEFAULT_SPACES[schema_group]["default"]
+#def get_default_space(schema_group, cls_name):
+#    print("get_default_space")
+#    if cls_name in DEFAULT_SPACES[schema_group]:
+#        print(DEFAULT_SPACES[schema_group][cls_name])
+#        return DEFAULT_SPACES[schema_group][cls_name]
+#    else:
+#        print("No default space")
+#        print(cls_name)
+#        print(schema_group)
+#        print(DEFAULT_SPACES[schema_group])
+#        return DEFAULT_SPACES[schema_group]["default"]
 
 
 # in general, we use the required fields when deciding whether a given object already exists
