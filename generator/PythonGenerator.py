@@ -104,12 +104,12 @@ def generate_doc(property, obj_title):
     return doc
 
 
-def invert_dict(D):
-    newD = {}
-    for key, values in D.items():
-        for value in values:
-            newD[value] = key
-    return newD
+#def invert_dict(D):
+#    newD = {}
+#    for key, values in D.items():
+#        for value in values:
+#            newD[value] = key
+#    return newD
 
 # in general, we use the required fields when deciding whether a given object already exists
 # in the KG. Sometimes this method is inappropriate or undesired, and so for some classes
