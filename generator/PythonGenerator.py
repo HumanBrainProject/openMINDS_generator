@@ -375,7 +375,6 @@ class PythonGenerator(JinjaGenerator):
         context = {
             #"imports": import_str,
             "class_name": generate_class_name(schema[TEMPLATE_PROPERTY_TYPE]).split(".")[-1],
-            #"default_space": default_space,
             "base_class": base_class,
             "openminds_type": schema[TEMPLATE_PROPERTY_TYPE],
             "docstring": schema.get("description", ""),
