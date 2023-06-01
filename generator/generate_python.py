@@ -37,8 +37,8 @@ def main(schema_path, generator_path=None, ignore=[], build_docs=False):
     print("Generating Python classes...")
     PythonGenerator(expander.schemas).generate(ignore=ignore)
 
-    shutil.copy("./OpenMINDS_Base.py", str(os.path.join(TARGET_PATH, "python", "openminds")))
-    shutil.copy("./fields.py", str(os.path.join(TARGET_PATH, "python", "openminds")))
+    #shutil.copy("./OpenMINDS_Base.py", str(os.path.join(TARGET_PATH, "python", "openminds")))
+    #shutil.copy("./fields.py", str(os.path.join(TARGET_PATH, "python", "openminds")))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
