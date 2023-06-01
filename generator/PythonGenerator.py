@@ -33,27 +33,27 @@ def list_kg_classes():
 # in general we make attribute names plural when the attribute can contain multiple items
 # the following dict contains exceptions to the simple rule we use for making names plural
 # (i.e. add 's' unless the word already ends in 's')
-custom_multiple = {
-    "data": "data",
-    "input_data": "input_data",
-    "output_data": "output_data",
-    "reference_data": "reference_data",
-    "funding": "funding",
-    "biological_sex": "biological_sex",
-    "age_category": "age_categories",
-    "descended_from": "descended_from",
-    "laterality": "laterality",
-    "software": "software",
-    "configuration": "configuration",
-    "is_part_of": "is_part_of",
-    "semantically_anchored_to": "semantically_anchored_to",
-    "is_alternative_version_of": "is_alternative_version_of",
-    "experimental_approach": "experimental_approaches",
-    "pathology": "pathologies",
-    "uncertainty": "uncertainties",
-    "application_category": "application_categories",
-    "about": "about"
-}
+#custom_multiple = {
+#    "data": "data",
+#    "input_data": "input_data",
+#    "output_data": "output_data",
+#    "reference_data": "reference_data",
+#    "funding": "funding",
+#    "biological_sex": "biological_sex",
+#    "age_category": "age_categories",
+#    "descended_from": "descended_from",
+#    "laterality": "laterality",
+#    "software": "software",
+#    "configuration": "configuration",
+#    "is_part_of": "is_part_of",
+#    "semantically_anchored_to": "semantically_anchored_to",
+#    "is_alternative_version_of": "is_alternative_version_of",
+#    "experimental_approach": "experimental_approaches",
+#    "pathology": "pathologies",
+#    "uncertainty": "uncertainties",
+#    "application_category": "application_categories",
+#    "about": "about"
+#}
 
 
 def generate_python_name(json_name, allow_multiple=False):
