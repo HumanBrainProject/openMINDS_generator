@@ -8,7 +8,6 @@
 
 from datetime import date, datetime
 import {{ base_class }}, IRI
-import Field
 
 {{preamble}}
 
