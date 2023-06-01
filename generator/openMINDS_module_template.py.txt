@@ -30,10 +30,10 @@ class {{ class_name }}({{ base_class }}):
 
 {{ additional_methods }}
 
- def save(fileName, fields):
-    output_dictionary = {}
-    for field in fields:
-        output_dictionary[field.name] = field.value
+    def save(fileName, fields):
+        output_dictionary = {}
+        for field in fields:
+            output_dictionary[field.name] = field.value
 
-    with open(fileName, "w") as output_file:
-        json.dump(output_dictionary, output_file)
+        with open(fileName, "w") as output_file:
+            json.dump(output_dictionary, output_file)
