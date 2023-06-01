@@ -4,6 +4,8 @@
 
 # this file was auto-generated
 
+{% include "fields.py" %}
+
 from datetime import date, datetime
 import {{ base_class }}, IRI
 import Field
