@@ -42,6 +42,7 @@ class Field(object):
         self.strict_mode = strict
         self.reverse = reverse
         self.doc = doc
+        self.value = default
 
     def __repr__(self):
         return "Field(name='{}', types={}, path='{}', required={}, multiple={})".format(
